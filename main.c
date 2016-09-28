@@ -4,6 +4,7 @@
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
 void add_matrices(int* A[], int* B[], int* destination[]);
+void substract_matrices(int* A[], int* B[], int* destination[]);
 // int copy_matrix(int *destination_matrix, int *source_matrix);
 
 #define MAX_ROWS 5
@@ -72,7 +73,7 @@ int main(void)
 
 	if (first_rows == second_rows && first_columns == second_columns)
 	{
-		add_matrices(first_matrix, second_matrix, destination_matrix);
+		substract_matrices(first_matrix, second_matrix, destination_matrix);
 	}
 	
 	printf("-------------------- DESTINATION MATRIX -------------------\n");
@@ -153,3 +154,23 @@ void add_matrices(int* A[], int* B[], int* destination[])
 		}
 	}
 }
+
+void substract_matrices(int* A[], int* B[], int* destination[])
+{
+	int y, x;
+
+	for (y = 0; y < MAX_ROWS; y++)
+	{
+		for (x = 0; x < MAX_COLUMNS; x++)
+		{
+			B[y][x] = B[y][x] * -1;
+			destination[y][x] = A[y][x] + B[y][x];
+		}
+	}
+
+}
+
+
+
+
+
