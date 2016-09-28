@@ -17,12 +17,11 @@ int main(void)
 	int **first_matrix;
 
 	// probe for measures
-	printf("give information for the first matrix\n");
-	printf("give number of rows\n");
+	printf("matrix A #rows\n");
 	scanf("%d", &first_rows);
-	printf("give number of columns\n");
+	printf("matrix B #columns\n");
 	scanf("%d", &first_columns);
-	printf("preferred matrix: %dx%d\n\n\n", first_rows, first_columns);
+	printf("A (%dx%d)\n\n\n", first_rows, first_columns);
 	
 	//allocate first matrix (2-d int array)
 	first_matrix = malloc(MAX_ROWS * sizeof *first_matrix);
@@ -42,12 +41,11 @@ int main(void)
 	int **second_matrix;
 
 	//probe for measures
-	printf("provide information for the second matrix\n");
-	printf("give number of rows\n");
+	printf("matrix B #rows\n");
 	scanf("%d", &second_rows);
-	printf("give number of columns\n");
+	printf("matrix B  #columns\n");
 	scanf("%d", &second_columns);
-	printf("preferred matrix: %dx%d\n\n\n", second_rows, second_columns);
+	printf("B (%dx%d)\n\n\n", second_rows, second_columns);
 	
 	//allocate second matrix (2-d int array)
 	second_matrix = malloc(MAX_ROWS * sizeof *second_matrix);
@@ -61,6 +59,12 @@ int main(void)
 	printf("-------------------- SECOND MATRIX -------------------\n");
 	print_matrix(second_matrix, second_rows, second_columns);
 	printf("------------------------------------------------------\n");
+	
+	int user_value;
+
+	printf("add or substract?\n");
+	printf("add = '1', substract = '2'\n");
+	scanf("%d", &user_value);
 
 	int **destination_matrix;
 
@@ -70,17 +74,34 @@ int main(void)
 	{
 		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
 	}
-
+	
 	if (first_rows == second_rows && first_columns == second_columns)
 	{
-		substract_matrices(first_matrix, second_matrix, destination_matrix);
+		if (user_value == 1)
+		{
+			add_matrices(first_matrix, second_matrix, destination_matrix);
+			printf("-------------------- DESTINATION MATRIX -------------------\n");
+			print_matrix(destination_matrix, first_rows, first_columns);
+			printf("-----------------------------------------------------------\n");
+		}
+		else if (user_value == 2)
+		{
+			substract_matrices(first_matrix, second_matrix, destination_matrix);
+			printf("-------------------- DESTINATION MATRIX -------------------\n");
+			print_matrix(destination_matrix, first_rows, first_columns);
+			printf("-----------------------------------------------------------\n");
+		}
+		else
+		{
+			printf("user value '%d' not recognized\n", user_value);
+		}
 	}
-	
-	printf("-------------------- DESTINATION MATRIX -------------------\n");
-	print_matrix(destination_matrix, first_rows, first_columns);
-	printf("-----------------------------------------------------------\n");
+	else
+	{
+		printf("A and B not the same size\n");
+	}
 
-	// free unused matrix space
+		// free unused matrix space
 	for (i = 0; i < MAX_ROWS; i++)
 	{
 		free(first_matrix[i]);
@@ -111,7 +132,7 @@ int build_matrix(int* matrix[], int rows, int columns)
 			}
 			else
 			{
-				printf("give [%d,%d] element:\n", y, x);
+				printf("element [%d,%d]:\n", y, x);
 				scanf("%d", &matrix[y][x]);
 			}
 		}
