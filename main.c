@@ -3,31 +3,8 @@
 
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
-// void add_matrices(int* A[], int first_rows, int first_columns, int* B[], int second_rows, int second_columns int* destination[]);
+void add_matrices(int* A[], int* B[], int* destination[]);
 // int copy_matrix(int *destination_matrix, int *source_matrix);
-
-/*
-typedef int m_2x1[2][1];
-typedef int m_2x2[2][2];
-typedef int m_2x3[2][3];
-typedef int m_2x4[2][4];
-typedef int m_2x5[2][5];
-typedef int m_3x1[3][1];
-typedef int m_3x2[3][2];
-typedef int m_3x3[3][3];
-typedef int m_3x4[3][4];
-typedef int m_3x5[3][5];
-typedef int m_4x1[4][1];
-typedef int m_4x2[4][2];
-typedef int m_4x3[4][3];
-typedef int m_4x4[4][4];
-typedef int m_4x5[4][5];
-typedef int m_5x1[5][1];
-typedef int m_5x2[5][2];
-typedef int m_5x3[5][3];
-typedef int m_5x4[5][4];
-typedef int m_5x5[5][5];
-*/
 
 #define MAX_ROWS 5
 #define MAX_COLUMNS 5
@@ -44,9 +21,9 @@ int main(void)
 	scanf("%d", &first_rows);
 	printf("give number of columns\n");
 	scanf("%d", &first_columns);
-	printf("preferred matrix: %dx%d\n", first_rows, first_columns);
+	printf("preferred matrix: %dx%d\n\n\n", first_rows, first_columns);
 	
-	//allocate matrix (2-d int array)
+	//allocate first matrix (2-d int array)
 	first_matrix = malloc(MAX_ROWS * sizeof *first_matrix);
 	for (i = 0; i < MAX_ROWS; i++)
 	{
@@ -55,7 +32,9 @@ int main(void)
 
 	//pass allocated matrix for element probing
 	build_matrix(first_matrix, first_rows, first_columns);
+	printf("-------------------- FIRST MATRIX -------------------\n");
 	print_matrix(first_matrix, first_rows, first_columns);
+	printf("-----------------------------------------------------\n");
 
 //----------------------- SECOND MATRIX -----------------------
 	int second_rows, second_columns, j;
@@ -67,9 +46,9 @@ int main(void)
 	scanf("%d", &second_rows);
 	printf("give number of columns\n");
 	scanf("%d", &second_columns);
-	printf("preferred matrix: %dx%d\n", second_rows, second_columns);
+	printf("preferred matrix: %dx%d\n\n\n", second_rows, second_columns);
 	
-	//allocate matrix (2-d int array)
+	//allocate second matrix (2-d int array)
 	second_matrix = malloc(MAX_ROWS * sizeof *second_matrix);
 	for (j = 0; j < MAX_ROWS; j++)
 	{
@@ -78,25 +57,40 @@ int main(void)
 
 	//pass allocated matrix for element probing
 	build_matrix(second_matrix, second_rows, second_columns);
+	printf("-------------------- SECOND MATRIX -------------------\n");
 	print_matrix(second_matrix, second_rows, second_columns);
+	printf("------------------------------------------------------\n");
 
+	int **destination_matrix;
 
+	//allocate destination matrix (2-d int array)
+	destination_matrix = malloc(MAX_ROWS * sizeof *destination_matrix);
+	for (j = 0; j < MAX_ROWS; j++)
+	{
+		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
+	}
+
+	if (first_rows == second_rows && first_columns == second_columns)
+	{
+		add_matrices(first_matrix, second_matrix, destination_matrix);
+	}
+	
+	printf("-------------------- DESTINATION MATRIX -------------------\n");
+	print_matrix(destination_matrix, first_rows, first_columns);
+	printf("-----------------------------------------------------------\n");
 
 	// free unused matrix space
-	for (i = 0; i < first_rows; i++)
+	for (i = 0; i < MAX_ROWS; i++)
 	{
 		free(first_matrix[i]);
+		free(second_matrix[i]);
+		free(destination_matrix[i]);
 	}
 
 	free(first_matrix);
-
-	for (j = 0; j < second_rows; j++)
-	{
-		free(second_matrix[j]);
-	}
-
 	free(second_matrix);
-
+	free(destination_matrix);
+	
 	return 0;
 }
 
@@ -147,16 +141,15 @@ void print_matrix(int* matrix[], int rows, int columns)
 	}
 }
 
-/*
-void add_matrices(int* A[], int first_rows, int first_columns, int* B[], int second_rows, second_columns, int* destination[])
+void add_matrices(int* A[], int* B[], int* destination[])
 {
-	// check if measures match
-	if ((first_rows != second_rows) || (first_columns != second_columns))
+	int y, x;
+
+	for (y = 0; y < MAX_ROWS; y++)
 	{
-		return;
+		for (x = 0; x < MAX_COLUMNS; x++)
+		{
+			destination[y][x] = A[y][x] + B[y][x];
+		}
 	}
-
-	
 }
-*/
-
