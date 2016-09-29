@@ -1,19 +1,19 @@
 #include <stdio.h>
 #include <stdlib.h>
-
-int build_matrix(int* matrix[], int rows, int columns);
-void print_matrix(int* matrix[], int rows, int columns);
-void add_matrices(int* A[], int* B[], int* destination[]);
-void substract_matrices(int* A[], int* B[], int* destination[]);
-// int copy_matrix(int *destination_matrix, int *source_matrix);
+#include "matrix_algebra.h"
 
 #define MAX_ROWS 5
 #define MAX_COLUMNS 5
 
+int build_matrix(int* matrix[], int rows, int columns);
+void print_matrix(int* matrix[], int rows, int columns);
+
+int first_rows, first_columns, second_rows, second_columns;
+
 int main(void)
 {
 	// ------------------------- FIRST MATRIX ---------------------------
-	int first_rows, first_columns, i;
+	int i;
 	int **first_matrix;
 
 	// probe for measures
@@ -37,7 +37,7 @@ int main(void)
 	printf("-----------------------------------------------------\n");
 
 //----------------------- SECOND MATRIX -----------------------
-	int second_rows, second_columns, j;
+	int j;
 	int **second_matrix;
 
 	//probe for measures
@@ -63,7 +63,7 @@ int main(void)
 	int user_value;
 
 	printf("add or substract?\n");
-	printf("add = '1', substract = '2'\n");
+	printf("add = '1', substract = '2', multiply = '3'\n");
 	scanf("%d", &user_value);
 
 	int **destination_matrix;
@@ -75,7 +75,18 @@ int main(void)
 		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
 	}
 	
-	if (first_rows == second_rows && first_columns == second_columns)
+
+	// MULTIPLY NOT WORKING PROPERLY YET
+	/*
+	if (user_value == 3)
+	{
+		multiply_matrices(first_matrix, second_matrix, destination_matrix);
+		printf("--------------------- DESTINATION MATRIX --------------------\n");
+		print_matrix(destination_matrix, first_rows, first_columns);
+		printf("-------------------------------------------------------------\n");
+	}
+	*/
+	/*elseif*/if (first_rows == second_rows && first_columns == second_columns)
 	{
 		if (user_value == 1)
 		{
@@ -162,36 +173,4 @@ void print_matrix(int* matrix[], int rows, int columns)
 		printf("\n");
 	}
 }
-
-void add_matrices(int* A[], int* B[], int* destination[])
-{
-	int y, x;
-
-	for (y = 0; y < MAX_ROWS; y++)
-	{
-		for (x = 0; x < MAX_COLUMNS; x++)
-		{
-			destination[y][x] = A[y][x] + B[y][x];
-		}
-	}
-}
-
-void substract_matrices(int* A[], int* B[], int* destination[])
-{
-	int y, x;
-
-	for (y = 0; y < MAX_ROWS; y++)
-	{
-		for (x = 0; x < MAX_COLUMNS; x++)
-		{
-			B[y][x] = B[y][x] * -1;
-			destination[y][x] = A[y][x] + B[y][x];
-		}
-	}
-
-}
-
-
-
-
 
