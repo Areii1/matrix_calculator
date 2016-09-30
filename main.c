@@ -147,19 +147,37 @@ void print_matrix(int* matrix[], int rows, int columns)
 
 void ask_for_measures(int a_or_b)
 {
-	if (a_or_b == 1)
-	{
-		printf("matrix A #rows\n");
-		scanf("%d", &A_rows);
-		printf("matrix B #columns\n");
-		scanf("%d", &A_columns);
-	}
-	else if (a_or_b == 2) {
-		printf("matrix A #rows\n");
-		scanf("%d", &B_rows);
-		printf("matrix B #columns\n");
-		scanf("%d", &B_columns);
-	}
+	int measure_conflict = 0;
+
+	do {
+		if (a_or_b == 1)
+		{
+			printf("matrix A #rows\n");
+			scanf("%d", &A_rows);
+			printf("matrix A #columns\n");
+			scanf("%d", &A_columns);
+			measure_conflict = 0;
+
+			if (A_rows > MAX_ROWS || A_columns > MAX_COLUMNS)
+			{
+				measure_conflict = -1;
+				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
+			}
+		}
+		else if (a_or_b == 2) {
+			printf("matrix A #rows\n");
+			scanf("%d", &B_rows);
+			printf("matrix A #columns\n");
+			scanf("%d", &B_columns);
+			measure_conflict = 0;
+
+			if (B_rows > MAX_ROWS || B_columns > MAX_COLUMNS)
+			{
+				measure_conflict = -1;
+				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
+			}
+		}
+	} while (measure_conflict == -1);
 }
 
 void malloc_matrix(int*** matrix)
