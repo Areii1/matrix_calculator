@@ -8,69 +8,36 @@
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
 void ask_for_measures(int a_or_b);
-//void malloc_matrix(int** matrix);
+void initialize_matrix(int*** matrix, int a_or_b);
+void malloc_matrix(int*** matrix);
 
 int A_rows, A_columns, B_rows, B_columns;
+int **A;
+int **B;
+int **destination_matrix;
 
 int main(void)
-
 {
-	// ------------------------- FIRST MATRIX ---------------------------
-	int i;
-	int **A;
-
-	// probe for measures on matrix A
-	ask_for_measures(1);
-	printf("A (%dx%d)\n\n\n", A_rows, A_columns);
-	
-	//allocate first matrix (2-d int array)
-	A = malloc(MAX_ROWS * sizeof *A);
-	for (i = 0; i < MAX_ROWS; i++)
-	{
-		A[i] = malloc(MAX_COLUMNS * sizeof *A[i]);
-	}
-
-	//pass allocated matrix for element probing
+// ----------------------FIRST MATRIX -------------------------------
+	initialize_matrix(&A, 1);
 	build_matrix(A, A_rows, A_columns);
-	printf("-------------------- FIRST MATRIX -------------------\n");
 	print_matrix(A, A_rows, A_columns);
-	printf("-----------------------------------------------------\n");
+//-------------------------------------------------------------------
 
-//----------------------- SECOND MATRIX -----------------------
-	int j;
-	int **B;
-
-	//probe for measures
-	ask_for_measures(2);
-	printf("B (%dx%d)\n\n\n", B_rows, B_columns);
-	
-	//allocate second matrix (2-d int array)
-	B = malloc(MAX_ROWS * sizeof *B);
-	for (j = 0; j < MAX_ROWS; j++)
-	{
-		B[j] = malloc(MAX_COLUMNS * sizeof *B[j]);
-	}
-
-	//pass allocated matrix for element probing
+//----------------------- SECOND MATRIX -----------------------------
+	initialize_matrix(&B, 2);
 	build_matrix(B, B_rows, B_columns);
-	printf("-------------------- SECOND MATRIX -------------------\n");
 	print_matrix(B, B_rows, B_columns);
-	printf("------------------------------------------------------\n");
-	
-	int user_value;
+//-------------------------------------------------------------------
 
+// -----------------------DESTINATION MATRIX-------------------------
+	malloc_matrix(&destination_matrix);
+//------------------------------------------------------------------
+
+	int user_value;
 	printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
 	scanf("%d", &user_value);
 
-	int **destination_matrix;
-
-	//allocate destination matrix (2-d int array)
-	destination_matrix = malloc(MAX_ROWS * sizeof *destination_matrix);
-	for (j = 0; j < MAX_ROWS; j++)
-	{
-		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
-	}
-	
 	//check for matrix measure legality for certain operations
 	if (((user_value == 1 || user_value == 2) && (A_rows == B_rows && A_columns == B_columns))
 			|| (user_value == 3 && A_columns == B_rows)
@@ -82,30 +49,22 @@ int main(void)
 		{
 			case 1:
 				add_matrices(A, B, destination_matrix);
-				printf("-------------------- DESTINATION MATRIX -------------------\n");
 				print_matrix(destination_matrix, A_rows, A_columns);
-				printf("-----------------------------------------------------------\n");
 				break;
 
 			case 2:
 				substract_matrices(A, B, destination_matrix);
-				printf("-------------------- DESTINATION MATRIX -------------------\n");
 				print_matrix(destination_matrix, A_rows, A_columns);
-				printf("-----------------------------------------------------------\n");
 				break;
 
 			case 3:
 				multiply_matrices(A, B, destination_matrix);
-				printf("--------------------- DESTINATION MATRIX --------------------\n");
 				print_matrix(destination_matrix, A_rows, A_columns);
-				printf("-------------------------------------------------------------\n");
 				break;
 
 			case 4:
 				transpose_matrix(B, destination_matrix);
-				printf("--------------------- DESTINATION MATRIX --------------------\n");
 				print_matrix(destination_matrix, A_rows, A_columns);
-				printf("-------------------------------------------------------------\n");
 				break;
 
 			default:
@@ -118,6 +77,7 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
+	int i;
 		// free unused matrix space
 	for (i = 0; i < MAX_ROWS; i++)
 	{
@@ -133,6 +93,13 @@ int main(void)
 	return 0;
 }
 
+void initialize_matrix(int*** matrix, int a_or_b)
+{
+	// probe for measures on matrix A
+	ask_for_measures(a_or_b);
+	printf("(%dx%d)\n\n\n", A_rows, A_columns);
+	malloc_matrix(matrix);
+}
 
 int build_matrix(int* matrix[], int rows, int columns)
 {
@@ -161,6 +128,7 @@ void print_matrix(int* matrix[], int rows, int columns)
 {
 	int y, x;	
 	
+	printf("___________________________________________________________________\n");
 	for (y = 0; y < MAX_ROWS; y++)
 	{
 		printf("\n");
@@ -174,6 +142,7 @@ void print_matrix(int* matrix[], int rows, int columns)
 		}
 		printf("\n");
 	}
+	printf("___________________________________________________________________\n\n");
 }
 
 void ask_for_measures(int a_or_b)
@@ -193,19 +162,14 @@ void ask_for_measures(int a_or_b)
 	}
 }
 
-/*
-void malloc_matrix(int** matrix)
+void malloc_matrix(int*** matrix)
 {
 	int j;
 
 	//allocate destination matrix (2-d int array)
-	matrix = malloc(MAX_ROWS * sizeof *matrix);
+	*matrix = (int*)malloc(MAX_ROWS * sizeof *matrix);
 	for (j = 0; j < MAX_ROWS; j++)
 	{
-		matrix[j] = malloc(MAX_COLUMNS * sizeof *matrix[j]);
-	}
-	
+		(*matrix)[j] = (int*)malloc(MAX_COLUMNS * sizeof *matrix[j]);
+	}	
 }
-*/
-
-
