@@ -51,7 +51,6 @@ int main(void)
 		B[j] = malloc(MAX_COLUMNS * sizeof *B[j]);
 	}
 
-
 	//pass allocated matrix for element probing
 	build_matrix(B, B_rows, B_columns);
 	printf("-------------------- SECOND MATRIX -------------------\n");
@@ -60,8 +59,7 @@ int main(void)
 	
 	int user_value;
 
-	printf("add or substract?\n");
-	printf("add = '1', substract = '2', multiply = '3'\n");
+	printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
 	scanf("%d", &user_value);
 
 	int **destination_matrix;
@@ -71,18 +69,30 @@ int main(void)
 	for (j = 0; j < MAX_ROWS; j++)
 	{
 		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
-	}
-	
+	}	
 
-	// MULTIPLY NOT WORKING PROPERLY YET
-	if (user_value == 3)
+	if (user_value == 4)
+	{
+		transpose_matrix(B, destination_matrix);
+		printf("--------------------- DESTINATION MATRIX --------------------\n");
+		print_matrix(destination_matrix, A_rows, A_columns);
+		printf("-------------------------------------------------------------\n");
+	}
+
+	// multiplication
+	if (user_value == 3 && A_columns == B_rows)
 	{
 		multiply_matrices(A, B, destination_matrix);
 		printf("--------------------- DESTINATION MATRIX --------------------\n");
 		print_matrix(destination_matrix, A_rows, A_columns);
 		printf("-------------------------------------------------------------\n");
 	}
-	else if (A_rows == B_rows && A_columns == B_columns)
+	else
+	{
+		printf("matrix A and B measures are not suited for multiplication\n");
+	}
+	// addition or substraction
+	if (A_rows == B_rows && A_columns == B_columns)
 	{
 		if (user_value == 1)
 		{
@@ -103,9 +113,9 @@ int main(void)
 			printf("user value '%d' not recognized\n", user_value);
 		}
 	}
-	else
+	else if (user_value == 1 || user_value == 2)
 	{
-		printf("A and B not the same size\n");
+		printf("matrix A and B measures not suited for addition or substraction\n");
 	}
 
 		// free unused matrix space
@@ -126,7 +136,6 @@ int main(void)
 
 int build_matrix(int* matrix[], int rows, int columns)
 {
-
 	int x, y;
 
 	for (y = 0; y < MAX_ROWS; y++)
@@ -155,17 +164,14 @@ void print_matrix(int* matrix[], int rows, int columns)
 	for (y = 0; y < MAX_ROWS; y++)
 	{
 		printf("\n");
-
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
 			if (x == columns)
 			{
 				printf("\t");
 			}
-
 			printf("%d\t", matrix[y][x]);
 		}
-
 		printf("\n");
 	}
 }

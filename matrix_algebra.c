@@ -30,7 +30,6 @@ void substract_matrices(int* A[], int* B[], int* destination[])
 			destination[y][x] = A[y][x] + B[y][x];
 		}
 	}
-
 }
 
 
@@ -67,7 +66,7 @@ int dot_product(int* a[], int* b[], int y, int x)
 	return result;
 }
 
-void print_vector(int* u[], int y, int x, int a_or_b)
+void print_vector(int* C[], int y, int x, int a_or_b)
 {
 	int i;
 	
@@ -75,14 +74,25 @@ void print_vector(int* u[], int y, int x, int a_or_b)
 	{
 		if (a_or_b == 1)
 		{
-			printf("A[0][%d] = %d\n", i,  u[y][i]);
+			printf("A[0][%d] = %d\n", i,  C[y][i]);
 		}
 		else if (a_or_b == 2)
 		{
-			printf("B[%d][0] = %d\n", i,  u[i][x]);
+			printf("B[%d][0] = %d\n", i,  C[i][x]);
 		}
 	}
 }
 
 
+void transpose_matrix(int* C[], int* destination_matrix[])
+{
+	int y, x;
 
+	for (y = 0; y < MAX_ROWS; y++)
+	{
+		for (x = 0; x < MAX_COLUMNS; x++)
+		{
+			destination_matrix[x][y] = C[y][x];
+		}
+	}
+}
