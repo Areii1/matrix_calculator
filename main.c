@@ -69,53 +69,53 @@ int main(void)
 	for (j = 0; j < MAX_ROWS; j++)
 	{
 		destination_matrix[j] = malloc(MAX_COLUMNS * sizeof *destination_matrix[i]);
-	}	
-
-	if (user_value == 4)
-	{
-		transpose_matrix(B, destination_matrix);
-		printf("--------------------- DESTINATION MATRIX --------------------\n");
-		print_matrix(destination_matrix, A_rows, A_columns);
-		printf("-------------------------------------------------------------\n");
 	}
-
-	// multiplication
-	if (user_value == 3 && A_columns == B_rows)
+	
+	//check for matrix measure legality for certain operations
+	if (((user_value == 1 || user_value == 2) && (A_rows == B_rows && A_columns == B_columns))
+			|| (user_value == 3 && A_columns == B_rows)
+			|| (user_value == 4)
+			)
 	{
-		multiply_matrices(A, B, destination_matrix);
-		printf("--------------------- DESTINATION MATRIX --------------------\n");
-		print_matrix(destination_matrix, A_rows, A_columns);
-		printf("-------------------------------------------------------------\n");
+	//execute the process determinde by user_value
+		switch (user_value)
+		{
+			case 1:
+				add_matrices(A, B, destination_matrix);
+				printf("-------------------- DESTINATION MATRIX -------------------\n");
+				print_matrix(destination_matrix, A_rows, A_columns);
+				printf("-----------------------------------------------------------\n");
+				break;
+
+			case 2:
+				substract_matrices(A, B, destination_matrix);
+				printf("-------------------- DESTINATION MATRIX -------------------\n");
+				print_matrix(destination_matrix, A_rows, A_columns);
+				printf("-----------------------------------------------------------\n");
+				break;
+
+			case 3:
+				multiply_matrices(A, B, destination_matrix);
+				printf("--------------------- DESTINATION MATRIX --------------------\n");
+				print_matrix(destination_matrix, A_rows, A_columns);
+				printf("-------------------------------------------------------------\n");
+				break;
+
+			case 4:
+				transpose_matrix(B, destination_matrix);
+				printf("--------------------- DESTINATION MATRIX --------------------\n");
+				print_matrix(destination_matrix, A_rows, A_columns);
+				printf("-------------------------------------------------------------\n");
+				break;
+
+			default:
+				printf("user value not regonized\n");
+				break;
+		}
 	}
 	else
 	{
-		printf("matrix A and B measures are not suited for multiplication\n");
-	}
-	// addition or substraction
-	if (A_rows == B_rows && A_columns == B_columns)
-	{
-		if (user_value == 1)
-		{
-			add_matrices(A, B, destination_matrix);
-			printf("-------------------- DESTINATION MATRIX -------------------\n");
-			print_matrix(destination_matrix, A_rows, A_columns);
-			printf("-----------------------------------------------------------\n");
-		}
-		else if (user_value == 2)
-		{
-			substract_matrices(A, B, destination_matrix);
-			printf("-------------------- DESTINATION MATRIX -------------------\n");
-			print_matrix(destination_matrix, A_rows, A_columns);
-			printf("-----------------------------------------------------------\n");
-		}
-		else
-		{
-			printf("user value '%d' not recognized\n", user_value);
-		}
-	}
-	else if (user_value == 1 || user_value == 2)
-	{
-		printf("matrix A and B measures not suited for addition or substraction\n");
+		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
 		// free unused matrix space
