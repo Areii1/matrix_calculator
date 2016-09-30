@@ -8,10 +8,12 @@
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
 void ask_for_measures(int a_or_b);
+//void malloc_matrix(int** matrix);
 
 int A_rows, A_columns, B_rows, B_columns;
 
 int main(void)
+
 {
 	// ------------------------- FIRST MATRIX ---------------------------
 	int i;
@@ -39,18 +41,16 @@ int main(void)
 	int **B;
 
 	//probe for measures
-	printf("matrix B #rows\n");
-	scanf("%d", &B_rows);
-	printf("matrix B  #columns\n");
-	scanf("%d", &B_columns);
+	ask_for_measures(2);
 	printf("B (%dx%d)\n\n\n", B_rows, B_columns);
 	
 	//allocate second matrix (2-d int array)
 	B = malloc(MAX_ROWS * sizeof *B);
 	for (j = 0; j < MAX_ROWS; j++)
 	{
-		B[j] = malloc(MAX_COLUMNS * sizeof *B[i]);
+		B[j] = malloc(MAX_COLUMNS * sizeof *B[j]);
 	}
+
 
 	//pass allocated matrix for element probing
 	build_matrix(B, B_rows, B_columns);
@@ -75,16 +75,14 @@ int main(void)
 	
 
 	// MULTIPLY NOT WORKING PROPERLY YET
-	/*
 	if (user_value == 3)
 	{
-		multiply_matrices(first_matrix, second_matrix, destination_matrix);
+		multiply_matrices(A, B, destination_matrix);
 		printf("--------------------- DESTINATION MATRIX --------------------\n");
-		print_matrix(destination_matrix, first_rows, first_columns);
+		print_matrix(destination_matrix, A_rows, A_columns);
 		printf("-------------------------------------------------------------\n");
 	}
-	*/
-	/*elseif*/if (A_rows == B_rows && A_columns == B_columns)
+	else if (A_rows == B_rows && A_columns == B_columns)
 	{
 		if (user_value == 1)
 		{
@@ -189,5 +187,19 @@ void ask_for_measures(int a_or_b)
 	}
 }
 
+/*
+void malloc_matrix(int** matrix)
+{
+	int j;
+
+	//allocate destination matrix (2-d int array)
+	matrix = malloc(MAX_ROWS * sizeof *matrix);
+	for (j = 0; j < MAX_ROWS; j++)
+	{
+		matrix[j] = malloc(MAX_COLUMNS * sizeof *matrix[j]);
+	}
+	
+}
+*/
 
 
