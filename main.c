@@ -45,6 +45,10 @@ int main(void)
 			)
 	{
 	//execute the process determinde by user_value
+
+		int user_choice;
+		int choice_conflict = 0;
+
 		switch (user_value)
 		{
 			case 1:
@@ -63,8 +67,32 @@ int main(void)
 				break;
 
 			case 4:
-				transpose_matrix(B, destination_matrix);
-				print_matrix(destination_matrix, A_rows, A_columns);
+			//	int user_choice;
+			//	int choice_conflict = 0;
+				printf("transpose A = 1, B = 2\n");
+
+				do
+				{
+					scanf("%d", &user_choice);
+					
+					if (user_choice == 1)
+					{
+						transpose_matrix(A, destination_matrix);
+						print_matrix(destination_matrix, 5, 5);
+						choice_conflict = 0;
+					}
+					else if (user_choice == 2)
+					{
+						transpose_matrix(B, destination_matrix);
+						print_matrix(destination_matrix, 5, 5);
+						choice_conflict = 0;
+					}
+					else
+					{
+						printf("did not recognize '%d', A = 1, B = 2\n", user_choice);
+						choice_conflict = 1;
+					}
+				} while (choice_conflict == 1);
 				break;
 
 			default:
@@ -78,14 +106,14 @@ int main(void)
 	}
 
 	int i;
-		// free unused matrix space
+
+	// free unused matrix space
 	for (i = 0; i < MAX_ROWS; i++)
 	{
 		free(A[i]);
 		free(B[i]);
 		free(destination_matrix[i]);
 	}
-
 	free(A);
 	free(B);
 	free(destination_matrix);
@@ -120,7 +148,6 @@ int build_matrix(int* matrix[], int rows, int columns)
 			}
 		}
 	}
-
 	return 0;
 }
 
@@ -160,7 +187,7 @@ void ask_for_measures(int a_or_b)
 
 			if (A_rows > MAX_ROWS || A_columns > MAX_COLUMNS)
 			{
-				measure_conflict = -1;
+				measure_conflict = 1;
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 			}
 		}
@@ -173,18 +200,17 @@ void ask_for_measures(int a_or_b)
 
 			if (B_rows > MAX_ROWS || B_columns > MAX_COLUMNS)
 			{
-				measure_conflict = -1;
+				measure_conflict = 1;
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 			}
 		}
-	} while (measure_conflict == -1);
+	} while (measure_conflict == 1);
 }
 
 void malloc_matrix(int*** matrix)
 {
 	int j;
 
-	//allocate destination matrix (2-d int array)
 	*matrix = (int*)malloc(MAX_ROWS * sizeof *matrix);
 	for (j = 0; j < MAX_ROWS; j++)
 	{

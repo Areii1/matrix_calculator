@@ -41,12 +41,7 @@ void multiply_matrices(int* A[], int* B[], int* destination[])
 	{
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			//printf("destination[%d][%d]\n= (", y, x);
-			//print_vector(A, y, 0, 1);
-			//print_vector(B, 0, x, 2);
-			//printf("\n");
 			destination[y][x] = dot_product(A, B, y, x);
-			//printf("\t)\n\n");
 		}
 	}
 }
@@ -59,10 +54,7 @@ int dot_product(int* a[], int* b[], int y, int x)
 	for (i = 0; i < MAX_COLUMNS; i++)
 	{
 		result = result + (a[y][i] * b[i][x]);
-		//printf("(%d * %d) + ", a[y][i], b[i][x]);
 	}
-	//printf(" = %d", result);
-
 	return result;
 }
 
@@ -82,7 +74,6 @@ void print_vector(int* C[], int y, int x, int a_or_b)
 		}
 	}
 }
-
 
 void transpose_matrix(int* C[], int* destination_matrix[])
 {
