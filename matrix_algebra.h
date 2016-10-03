@@ -1,5 +1,5 @@
-#define MAX_ROWS 5
-#define MAX_COLUMNS 5
+#define MAX_ROWS 10
+#define MAX_COLUMNS 10
 
 void add_matrices(int* A[], int* B[], int* destination[]);
 

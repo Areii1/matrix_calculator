@@ -2,14 +2,18 @@
 #include <stdlib.h>
 #include "matrix_algebra.h"
 
-#define MAX_ROWS 5
-#define MAX_COLUMNS 5
+#define MAX_ROWS 10
+#define MAX_COLUMNS 10
+
+#define FILENAME "matrix.txt"
+#define MAXSTRLEN 200
 
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
 void ask_for_measures(int a_or_b);
 void initialize_matrix(int*** matrix, int a_or_b);
 void malloc_matrix(int*** matrix);
+void read_matrix(void);
 
 int A_rows, A_columns, B_rows, B_columns;
 int **A;
@@ -19,6 +23,7 @@ int **destination_matrix;
 int main(void)
 {
 // ----------------------FIRST MATRIX -------------------------------
+	read_matrix();
 	initialize_matrix(&A, 1);
 	build_matrix(A, A_rows, A_columns);
 	print_matrix(A, A_rows, A_columns);
@@ -105,8 +110,8 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
-	int i;
 
+	int i;
 	// free unused matrix space
 	for (i = 0; i < MAX_ROWS; i++)
 	{
@@ -125,7 +130,16 @@ void initialize_matrix(int*** matrix, int a_or_b)
 {
 	// probe for measures on matrix A
 	ask_for_measures(a_or_b);
-	printf("(%dx%d)\n\n\n", A_rows, A_columns);
+	
+	if (a_or_b == 1)
+	{
+		printf("A = (%dx%d)\n\n", A_rows, A_columns);
+	}
+	else if (a_or_b == 2)
+	{	
+		printf("B = (%dx%d)\n\n", B_rows, B_columns);
+	}
+
 	malloc_matrix(matrix);
 }
 
@@ -135,7 +149,7 @@ int build_matrix(int* matrix[], int rows, int columns)
 
 	for (y = 0; y < MAX_ROWS; y++)
 	{
-		for (x = 0; x < columns; x++)
+		for (x = 0; x < MAX_COLUMNS; x++)
 		{
 			if ((y >= rows && y < MAX_ROWS) || (x >= columns && x < MAX_COLUMNS))
 			{
@@ -143,7 +157,7 @@ int build_matrix(int* matrix[], int rows, int columns)
 			}
 			else
 			{
-				printf("element [%d,%d]:\n", y, x);
+				printf("element [%d,%d]: ", y, x);
 				scanf("%d", &matrix[y][x]);
 			}
 		}
@@ -161,10 +175,6 @@ void print_matrix(int* matrix[], int rows, int columns)
 		printf("\n");
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			if (x == columns)
-			{
-				printf("\t");
-			}
 			printf("%d\t", matrix[y][x]);
 		}
 		printf("\n");
@@ -179,9 +189,9 @@ void ask_for_measures(int a_or_b)
 	do {
 		if (a_or_b == 1)
 		{
-			printf("matrix A #rows\n");
+			printf("A #rows: ");
 			scanf("%d", &A_rows);
-			printf("matrix A #columns\n");
+			printf("A #columns: ");
 			scanf("%d", &A_columns);
 			measure_conflict = 0;
 
@@ -192,9 +202,9 @@ void ask_for_measures(int a_or_b)
 			}
 		}
 		else if (a_or_b == 2) {
-			printf("matrix A #rows\n");
+			printf("B #rows: ");
 			scanf("%d", &B_rows);
-			printf("matrix A #columns\n");
+			printf("B #columns: ");
 			scanf("%d", &B_columns);
 			measure_conflict = 0;
 
@@ -217,3 +227,27 @@ void malloc_matrix(int*** matrix)
 		(*matrix)[j] = (int*)malloc(MAX_COLUMNS * sizeof *matrix[j]);
 	}	
 }
+
+
+void read_matrix(void)
+{
+	FILE *fp;
+	fp = fopen(FILENAME, "r");
+	char line[MAXSTRLEN];
+	
+	if (fp != 0)
+	{
+		while (fgets(line, sizeof(line), fp) != 0)
+		{
+			printf("%s", line);
+		}
+		fclose(fp);
+	}
+	else
+	{
+		printf("File %s cannot be opened!\n", FILENAME);
+	}
+}
+
+
+

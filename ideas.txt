@@ -1,0 +1,44 @@
+TO be implemented on the calculator:
+
+- Be able to save and load matrices by name, to/from a file.
+
+- have the program recognize and execute statements like (A * B) written as input to scanf
+
+-
+
+- solve linear systems in the form of Ax = b, where A is the matrix of coefficients, 
+	x is vector of unknowns (x, y, z) and b is a vector of constants.
+	
+		- by solving we mean applying the gaussian elimination method, and getting the matrix into 
+			row canonical form. From which one can extract the answer of the linear system.
+
+				- 
+
+
+
+FLOW OF THE PROGRAM:
+
+- user is asked to provide a matrix or give a statement, (choice 1 or choice 2).
+
+1 --->	- user is asked to provide a coefficient matrix, unknown vector or a constant vector. (1, 2 or 3)
+					- user is asked to provide a name for the matrix.				
+						- user is asked to provide the measures for the matrix.
+							- user is asked to provide the elements of the matrix, (within the bounds of the given measures).
+								- program saves the given information on a file.
+
+
+2 --->	 - the program loads the given matrix or matrices and recognized what operations needs to be done
+					- if the operation produces a new matrix, the user is asked to provide a name for that matrix.	
+						- the statement is executed, printed and results are saved.
+
+
+- also the user can write help, which brings up a list of commands and descriptions of things that can be done
+	- for example print every matrix available on the storage
+		- or change the MAX_ROWS, MAX_COLUMNS
+
+
+
+
+ADDITIONAL IDEAS:
+
+- make tests to check the validity of certain operations
