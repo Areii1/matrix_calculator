@@ -15,7 +15,7 @@ void initialize_matrix(int*** matrix, int a_or_b);
 void malloc_matrix(int*** matrix);
 
 void read_matrix(void);
-void append_matrix(int* matrix[]);
+void append_matrix(int* matrix[], char* name);
 void clear_file(void);
 
 int A_rows, A_columns, B_rows, B_columns;
@@ -113,7 +113,10 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
-	append_matrix(A);
+	printf("give a name for the matrix A\n");
+	char name[100];
+	scanf("%s", name);
+	append_matrix(A, name);
 
 	int i;
 	// free unused matrix space
@@ -243,7 +246,7 @@ void read_matrix(void)
 	{
 		while (fgets(line, sizeof(line), fp) != 0)
 		{
-			printf("%s\n", line);
+			printf("%s", line);
 		}
 		fclose(fp);
 	}
@@ -253,14 +256,25 @@ void read_matrix(void)
 	}
 }
 
-void append_matrix(int* matrix[])
+void append_matrix(int* matrix[], char* name)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 
-	fputs("'A[0][0]'=", fp);
-	fprintf(fp, "%d\n", matrix[0][0]);
-	fclose(fp);
+	fprintf(fp, "'%s'=", name);
+	int x, y;
+
+	fputs("{", fp);
+	for (x = 0; x < MAX_ROWS; x++)
+	{
+		fputs("{", fp);
+		for (y = 0; y < MAX_COLUMNS; y++)
+		{
+			fprintf(fp, "%d,", matrix[y][x]);
+		}
+		fputs("}", fp);
+	}
+	fputs("}\n", fp);
 }
 
 void clear_file(void)
