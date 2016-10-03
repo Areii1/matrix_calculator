@@ -13,7 +13,10 @@ void print_matrix(int* matrix[], int rows, int columns);
 void ask_for_measures(int a_or_b);
 void initialize_matrix(int*** matrix, int a_or_b);
 void malloc_matrix(int*** matrix);
+
 void read_matrix(void);
+void append_matrix(int* matrix[]);
+void clear_file(void);
 
 int A_rows, A_columns, B_rows, B_columns;
 int **A;
@@ -110,6 +113,7 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
+	append_matrix(A);
 
 	int i;
 	// free unused matrix space
@@ -239,7 +243,7 @@ void read_matrix(void)
 	{
 		while (fgets(line, sizeof(line), fp) != 0)
 		{
-			printf("%s", line);
+			printf("%s\n", line);
 		}
 		fclose(fp);
 	}
@@ -248,6 +252,24 @@ void read_matrix(void)
 		printf("File %s cannot be opened!\n", FILENAME);
 	}
 }
+
+void append_matrix(int* matrix[])
+{
+	FILE *fp;
+	fp = fopen(FILENAME, "a");
+
+	fputs("'A[0][0]'=", fp);
+	fprintf(fp, "%d\n", matrix[0][0]);
+	fclose(fp);
+}
+
+void clear_file(void)
+{
+	FILE *fp;
+	fp = fopen(FILENAME, "w");
+	fclose(fp);
+}
+
 
 
 
