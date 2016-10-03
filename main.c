@@ -6,7 +6,7 @@
 #define MAX_COLUMNS 10
 
 #define FILENAME "matrix.txt"
-#define MAXSTRLEN 200
+#define MAXSTRLEN 300
 
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int rows, int columns);
@@ -24,9 +24,54 @@ int **B;
 int **destination_matrix;
 
 int main(void)
-{
+{	
+	int user_value;
+
+	do {
+
+	printf("------------------------ USER OPTIONS -------------------------------------\n");
+	printf("enter a matrix = 1\n");
+	printf("give a statement = 2\n");
+	printf("print earlier matrix entries = '7'\n");
+	printf("delete earlier matrix entries = '8'\n");
+	printf("exit program = '9'\n");
+	printf("---------------------------------------------------------------------------\n");
+	
+	scanf("%d", &user_value);
+		switch (user_value)
+		{
+			case 1:
+		/*		initialize_matrix(&A, 1);
+				build_matrix(A, A_rows, A_columns);
+				print_matrix(A, A_rows, A_columns);
+
+				printf("give a name for the given matrix\n");
+				char name[100];
+				scanf("%s", name);
+				append_matrix(A, name);
+		*/	break;
+
+			case 2:
+				printf("can't do that shit yet\n");
+				break;
+
+			case 7:
+				read_matrix();
+				break;
+
+			case 8:
+				clear_file();	
+				break;
+
+			case 9:
+				exit(0);
+
+			default:
+				printf("value ('%d') not recognized\n", user_value);
+		}
+	} while (user_value != 1);
+
 // ----------------------FIRST MATRIX -------------------------------
-	read_matrix();
 	initialize_matrix(&A, 1);
 	build_matrix(A, A_rows, A_columns);
 	print_matrix(A, A_rows, A_columns);
@@ -42,7 +87,6 @@ int main(void)
 	malloc_matrix(&destination_matrix);
 //------------------------------------------------------------------
 
-	int user_value;
 	printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
 	scanf("%d", &user_value);
 
@@ -261,7 +305,7 @@ void append_matrix(int* matrix[], char* name)
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 
-	fprintf(fp, "'%s'=", name);
+	fprintf(fp, "\n'%s'=", name);
 	int x, y;
 
 	fputs("{", fp);
@@ -282,8 +326,6 @@ void clear_file(void)
 	FILE *fp;
 	fp = fopen(FILENAME, "w");
 	fclose(fp);
+
+	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
-
-
-
-
