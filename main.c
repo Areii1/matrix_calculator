@@ -17,6 +17,7 @@ void malloc_matrix(int*** matrix);
 void read_matrix(void);
 void append_matrix(int* matrix[], char* name);
 void clear_file(void);
+void ask_for_name(int* matrix[]);
 
 int A_rows, A_columns, B_rows, B_columns;
 int **A;
@@ -41,7 +42,7 @@ int main(void)
 		switch (user_value)
 		{
 			case 1:
-		/*		initialize_matrix(&A, 1);
+		/*	initialize_matrix(&A, 1);
 				build_matrix(A, A_rows, A_columns);
 				print_matrix(A, A_rows, A_columns);
 
@@ -75,12 +76,14 @@ int main(void)
 	initialize_matrix(&A, 1);
 	build_matrix(A, A_rows, A_columns);
 	print_matrix(A, A_rows, A_columns);
+	ask_for_name(A);
 //-------------------------------------------------------------------
 
 //----------------------- SECOND MATRIX -----------------------------
 	initialize_matrix(&B, 2);
 	build_matrix(B, B_rows, B_columns);
 	print_matrix(B, B_rows, B_columns);
+	ask_for_name(B);
 //-------------------------------------------------------------------
 
 // -----------------------DESTINATION MATRIX-------------------------
@@ -157,10 +160,12 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
-	printf("give a name for the matrix A\n");
+	ask_for_name(destination_matrix);
+/*	printf("give a name for the matrix A\n");
 	char name[100];
 	scanf("%s", name);
 	append_matrix(A, name);
+*/
 
 	int i;
 	// free unused matrix space
@@ -207,7 +212,7 @@ int build_matrix(int* matrix[], int rows, int columns)
 				matrix[y][x] = 0;
 			}
 			else
-			{
+{
 				printf("element [%d,%d]: ", y, x);
 				scanf("%d", &matrix[y][x]);
 			}
@@ -329,3 +334,17 @@ void clear_file(void)
 
 	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
+
+void ask_for_name(int* matrix[])
+{
+	printf("give a name for the matrix\n");
+	char name[100];
+	scanf("%s", name);
+	append_matrix(matrix, name);
+}
+
+
+
+
+
+
