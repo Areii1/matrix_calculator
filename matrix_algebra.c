@@ -5,7 +5,7 @@
 #define MAX_ROWS 10
 #define MAX_COLUMNS 10
 
-void add_matrices(int* A[], int* B[], int* destination[])
+void add_matrices(int* A[], int* B[], int* C[])
 {
 	int y, x;
 
@@ -13,12 +13,12 @@ void add_matrices(int* A[], int* B[], int* destination[])
 	{
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			destination[y][x] = A[y][x] + B[y][x];
+			C[y][x] = A[y][x] + B[y][x];
 		}
 	}
 }
 
-void substract_matrices(int* A[], int* B[], int* destination[])
+void substract_matrices(int* A[], int* B[], int* C[])
 {
 	int y, x;
 
@@ -27,13 +27,13 @@ void substract_matrices(int* A[], int* B[], int* destination[])
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
 			B[y][x] = B[y][x] * -1;
-			destination[y][x] = A[y][x] + B[y][x];
+			C[y][x] = A[y][x] + B[y][x];
 		}
 	}
 }
 
 
-void multiply_matrices(int* A[], int* B[], int* destination[])
+void multiply_matrices(int* A[], int* B[], int* C[])
 {
 	int y, x;
 
@@ -41,7 +41,7 @@ void multiply_matrices(int* A[], int* B[], int* destination[])
 	{
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			destination[y][x] = dot_product(A, B, y, x);
+			C[y][x] = dot_product(A, B, y, x);
 		}
 	}
 }
@@ -75,7 +75,7 @@ void print_vector(int* C[], int y, int x, int a_or_b)
 	}
 }
 
-void transpose_matrix(int* C[], int* destination_matrix[])
+void transpose_matrix(int* A[], int* C[])
 {
 	int y, x;
 
@@ -83,7 +83,29 @@ void transpose_matrix(int* C[], int* destination_matrix[])
 	{
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			destination_matrix[x][y] = C[y][x];
+			C[x][y] = A[y][x];
 		}
 	}
 }
+
+/*
+receives a pointer to a matrix with matrix_rows amount of non-degenerate rows, 
+*/
+/*
+void gaussian_elimination(int* matrix[], int* destination_matrix[],
+		int matrix_rows, int matrix_columns)
+{
+	int y, x;
+
+	for (y = 0; y < matrix_rows; y++)
+	{
+		for (x = 0; x < matri_columns; x++)
+		{
+			if (matrix[x][0] != 0)
+				{
+					interchange_rows(0, y);
+				}
+		}
+	}
+}
+*/

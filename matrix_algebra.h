@@ -11,4 +11,4 @@ int dot_product(int* a[], int* b[], int y, int x);
 
 void print_vector(int* C[], int y, int x, int a_or_b);
 
-void transpose_matrix(int* C[], int* destination_matrix[]);
+void transpose_matrix(int* A[], int* C[]);

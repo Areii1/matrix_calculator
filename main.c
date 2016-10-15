@@ -18,11 +18,12 @@ void read_matrix(void);
 void append_matrix(int* matrix[], char* name);
 void clear_file(void);
 void ask_for_name(int* matrix[]);
+void read_matrix_into_variable(char* name, int varibale);
 
 int A_rows, A_columns, B_rows, B_columns;
 int **A;
 int **B;
-int **destination_matrix;
+int **C;
 
 int main(void)
 {	
@@ -33,29 +34,35 @@ int main(void)
 	printf("------------------------ USER OPTIONS -------------------------------------\n");
 	printf("enter a matrix = 1\n");
 	printf("give a statement = 2\n");
+	printf("read a matrix by name, into a variable = 3\n");
 	printf("print earlier matrix entries = '7'\n");
 	printf("delete earlier matrix entries = '8'\n");
 	printf("exit program = '9'\n");
 	printf("---------------------------------------------------------------------------\n");
 	
+	char matrix_name[1];
+	int A_B_or_C;
+
 	scanf("%d", &user_value);
 		switch (user_value)
 		{
 			case 1:
-		/*	initialize_matrix(&A, 1);
-				build_matrix(A, A_rows, A_columns);
-				print_matrix(A, A_rows, A_columns);
-
-				printf("give a name for the given matrix\n");
-				char name[100];
-				scanf("%s", name);
-				append_matrix(A, name);
-		*/	break;
+				break;
 
 			case 2:
 				printf("can't do that shit yet\n");
 				break;
 
+			case 3:
+
+				printf("variable name to search?\n");
+				scanf("%s", &matrix_name);
+
+				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
+				scanf("%d", &A_B_or_C);
+
+				read_matrix_into_variable(matrix_name, A_B_or_C);
+				break;
 			case 7:
 				read_matrix();
 				break;
@@ -87,7 +94,7 @@ int main(void)
 //-------------------------------------------------------------------
 
 // -----------------------DESTINATION MATRIX-------------------------
-	malloc_matrix(&destination_matrix);
+	malloc_matrix(&C);
 //------------------------------------------------------------------
 
 	printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
@@ -107,18 +114,18 @@ int main(void)
 		switch (user_value)
 		{
 			case 1:
-				add_matrices(A, B, destination_matrix);
-				print_matrix(destination_matrix, A_rows, A_columns);
+				add_matrices(A, B, C);
+				print_matrix(C, A_rows, A_columns);
 				break;
 
 			case 2:
-				substract_matrices(A, B, destination_matrix);
-				print_matrix(destination_matrix, A_rows, A_columns);
+				substract_matrices(A, B, C);
+				print_matrix(C, A_rows, A_columns);
 				break;
 
 			case 3:
-				multiply_matrices(A, B, destination_matrix);
-				print_matrix(destination_matrix, A_rows, A_columns);
+				multiply_matrices(A, B, C);
+				print_matrix(C, A_rows, A_columns);
 				break;
 
 			case 4:
@@ -132,14 +139,14 @@ int main(void)
 					
 					if (user_choice == 1)
 					{
-						transpose_matrix(A, destination_matrix);
-						print_matrix(destination_matrix, 5, 5);
+						transpose_matrix(A, C);
+						print_matrix(C, 5, 5);
 						choice_conflict = 0;
 					}
 					else if (user_choice == 2)
 					{
-						transpose_matrix(B, destination_matrix);
-						print_matrix(destination_matrix, 5, 5);
+						transpose_matrix(B, C);
+						print_matrix(C, 5, 5);
 						choice_conflict = 0;
 					}
 					else
@@ -160,7 +167,7 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
-	ask_for_name(destination_matrix);
+	ask_for_name(C);
 /*	printf("give a name for the matrix A\n");
 	char name[100];
 	scanf("%s", name);
@@ -173,11 +180,11 @@ int main(void)
 	{
 		free(A[i]);
 		free(B[i]);
-		free(destination_matrix[i]);
+		free(C[i]);
 	}
 	free(A);
 	free(B);
-	free(destination_matrix);
+	free(C);
 	
 	return 0;
 }
@@ -310,7 +317,7 @@ void append_matrix(int* matrix[], char* name)
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 
-	fprintf(fp, "\n'%s'=", name);
+	fprintf(fp, "<%s>=", name);
 	int x, y;
 
 	fputs("{", fp);
@@ -337,9 +344,9 @@ void clear_file(void)
 
 void ask_for_name(int* matrix[])
 {
-	printf("give a name for the matrix\n");
-	char name[100];
-	scanf("%s", name);
+	printf("give a one character long name for the matrix\n");
+	char name[1];
+	scanf("%s", &name);
 	append_matrix(matrix, name);
 }
 
@@ -348,3 +355,31 @@ void ask_for_name(int* matrix[])
 
 
 
+
+/* search matrix by name from matrix.txt file and read it to a variable
+in the program (A or B or C).
+*/
+void read_matrix_into_variable(char* name, int variable)
+{
+	char variable_char = name[0];
+
+	FILE *fp;
+	fp = fopen(FILENAME, "r");
+	char line[MAXSTRLEN];
+	
+	if (fp != 0)
+	{
+		while (fgets(line, sizeof(line), fp) != 0)
+		{
+			if (line[0] == '<' && line[1] == variable_char)
+			{
+				printf("found variable %c\n", variable_char);
+			}
+		}
+		fclose(fp);
+	}
+	else
+	{
+		printf("File %s cannot be opened!\n", FILENAME);
+	}
+}
