@@ -11,7 +11,7 @@
 #define MAXSTRLEN 2000
 
 /* matrix building related functions */
-void get_matrix(int* matrix[], int chosen_variable);
+void complete_matrix(int* matrix[]);
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int user_rows, int user_columns);
 void malloc_matrix(int*** matrix);
@@ -28,10 +28,10 @@ void input_matrix_identifier(int* matrix[], int user_rows, int user_columns);
 
 int count_line_length(char* line);
 
-static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
-static int **A;
-static int **B;
-static int **C;
+static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns, chosen_variable_rows, chosen_variable_columns;
+static int **slot_A;
+static int **slot_B;
+static int **slot_C;
 static int chosen_variable;
 static char assigned_matrix_identifier[1];
 static char searched_matrix_identifier[1];
@@ -57,11 +57,22 @@ int main(void)
 		switch (user_choice)
 		{
 			case 1:
-				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
+				printf("variable index to put in? 'slot_A' = 1, 'slot_B' = 2, 'slot_C' = 3\n");
 				scanf("%d", &chosen_variable);
+		
+				if (chosen_variable == 1)
+				{
+					complete_matrix(slot_A);
+				}
+				else if (chosen_variable == 2)
+				{
+					complete_matrix(slot_B);
+				}
+				else if (chosen_variable == 3)
+				{
+					complete_matrix(slot_C);
+				}
 
-				get_matrix(A, chosen_variable);
-				
 				break;
 
 			case 2:
@@ -73,7 +84,7 @@ int main(void)
 				printf("variable name to search?\n");
 				scanf("%s", &searched_matrix_identifier);
 
-				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
+				printf("variable index to put in? 'slot_A' = 1, 'slot_B' = 2, 'slot_C' = 3\n");
 				scanf("%d", &chosen_variable);
 
 				read_matrix_from_file_into_variable(searched_matrix_identifier, chosen_variable);
@@ -99,22 +110,22 @@ int main(void)
 					switch (user_choice)
 					{
 						case 1:
-							add_matrices(A, B, C);
-							print_matrix(C, A_rows, B_columns);
+							add_matrices(slot_A, slot_B, slot_C);
+							print_matrix(slot_C, A_rows, B_columns);
 							break;
 
 						case 2:
-							substract_matrices(A, B, C);
-							print_matrix(C, A_rows, B_columns);
+							substract_matrices(slot_A, slot_B, slot_C);
+							print_matrix(slot_C, A_rows, B_columns);
 							break;
 
 						case 3:
-							multiply_matrices(A, B, C);
-							print_matrix(C, A_rows, B_columns);
+							multiply_matrices(slot_A, slot_B, slot_C);
+							print_matrix(slot_C, A_rows, B_columns);
 							break;
 
 						case 4:
-							printf("transpose A = 1, B = 2\n");
+							printf("transpose slot_A = 1, slot_B = 2\n");
 
 							do
 							{
@@ -122,19 +133,19 @@ int main(void)
 								
 								if (user_choice == 1)
 								{
-									transpose_matrix(A, C);
-									print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+									transpose_matrix(slot_A, slot_C);
+									print_matrix(slot_C, MAX_ROWS, MAX_COLUMNS);
 									choice_conflict = 0;
 								}
 								else if (user_choice == 2)
 								{
-									transpose_matrix(B, C);
-									print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+									transpose_matrix(slot_B, slot_C);
+									print_matrix(slot_C, MAX_ROWS, MAX_COLUMNS);
 									choice_conflict = 0;
 								}
 								else
 								{
-									printf("did not recognize '%d', A = 1, B = 2\n", user_choice);
+									printf("did not recognize '%d', slot_A = 1, slot_B = 2\n", user_choice);
 									choice_conflict = 1;
 								}
 							} while (choice_conflict == 1);
@@ -147,7 +158,7 @@ int main(void)
 				}
 				else
 				{
-					printf("matrix A and B measures do not support the user suggested operation\n");
+					printf("matrix slot_A and slot_B measures do not support the user suggested operation\n");
 				}
 
 				
@@ -174,57 +185,27 @@ int main(void)
 	// free unused matrix space
 	for (i = 0; i < MAX_ROWS; i++)
 	{
-		free(A[i]);
-		free(B[i]);
-		free(C[i]);
+		free(slot_A[i]);
+		free(slot_B[i]);
+		free(slot_C[i]);
 	}
-	free(A);
-	free(B);
-	free(C);
+	free(slot_A);
+	free(slot_B);
+	free(slot_C);
 	
 	return 0;
 }
 
-void get_matrix(int* matrix[], int chosen_variable)
-{
-	if (chosen_variable == 1)
-	{
-		input_matrix_measures(chosen_variable);
-		malloc_matrix(&A);
-		build_matrix(A, A_rows, A_columns);
-		print_matrix(A, A_rows, A_columns);
-		input_matrix_identifier(A, A_rows, A_columns);
-		write_matrix_to_file(A, A_rows, A_columns, assigned_matrix_identifier);
-	}
-	else if (chosen_variable == 2)
-	{
-		input_matrix_measures(chosen_variable);
-		malloc_matrix(&B);
-		build_matrix(B, B_rows, B_columns);
-		print_matrix(B, B_rows, B_columns);
-		input_matrix_identifier(B, B_rows, B_columns);
-		write_matrix_to_file(B, B_rows, B_columns, assigned_matrix_identifier);
-	}
-	else if (chosen_variable == 3)
-	{
-		input_matrix_measures(chosen_variable);
-		malloc_matrix(&C);
-		build_matrix(C, C_rows, C_columns);
-		print_matrix(C, C_rows, C_columns);
-		input_matrix_identifier(C, C_rows, C_columns);
-		write_matrix_to_file(C, C_rows, C_columns, assigned_matrix_identifier);
-	}
-}
-/*
 void complete_matrix(int* matrix[])
 {
-		initialize_matrix(&matrix, chosen_variable);
-		build_matrix(matrix, A_rows, A_columns);
-		print_matrix(matrix, A_rows, A_columns);
-		input_matrix_identifier(matrix, A_rows, A_columns);
-		write_matrix_to_file(matrix, A_rows, A_columns, assigned_matrix_identifier);
+		input_matrix_measures(chosen_variable);
+		malloc_matrix(&slot_A);
+		build_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
+		print_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
+		input_matrix_identifier(slot_A, chosen_variable_rows, chosen_variable_columns);
+		write_matrix_to_file(slot_A, chosen_variable_rows, chosen_variable_columns, assigned_matrix_identifier);
 }
-*/
+
 int build_matrix(int* matrix[], int rows, int columns)
 {
 	int x, y;
@@ -262,14 +243,18 @@ void input_matrix_measures(int chosen_variable)
 {
 	int measure_conflict = 0;
 
+	
+	printf("#rows: ");
+	scanf("%d", &chosen_variable_rows);
+	printf("#columns: ");
+	scanf("%d", &chosen_variable_columns);
 	do 
 	{
 		if (chosen_variable == 1)
 		{
-			printf("A #rows: ");
-			scanf("%d", &A_rows);
-			printf("A #columns: ");
-			scanf("%d", &A_columns);
+			A_rows = chosen_variable_rows;
+			A_columns = chosen_variable_columns;
+
 			measure_conflict = 0;
 
 			if (A_rows > MAX_ROWS || A_columns > MAX_COLUMNS)
@@ -280,10 +265,9 @@ void input_matrix_measures(int chosen_variable)
 		}
 		else if (chosen_variable == 2) 
 		{
-			printf("B #rows: ");
-			scanf("%d", &B_rows);
-			printf("B #columns: ");
-			scanf("%d", &B_columns);
+			B_rows = chosen_variable_rows;
+			B_columns = chosen_variable_columns;
+			
 			measure_conflict = 0;
 
 			if (B_rows > MAX_ROWS || B_columns > MAX_COLUMNS)
@@ -294,10 +278,9 @@ void input_matrix_measures(int chosen_variable)
 		}
 		else if (chosen_variable = 3) 
 		{
-			printf("C #rows: ");
-			scanf("%d", &C_rows);
-			printf("C #columns: ");
-			scanf("%d", &C_columns);
+			C_rows = chosen_variable_rows;
+			C_columns = chosen_variable_columns;
+			
 			measure_conflict = 0;
 
 			if (C_rows > MAX_ROWS || C_columns > MAX_COLUMNS)
@@ -311,15 +294,15 @@ void input_matrix_measures(int chosen_variable)
 	/* print the measures */
 	if (chosen_variable == 1)
 	{
-		printf("A = (%dx%d)\n\n", A_rows, A_columns);
+		printf("slot_A = (%dx%d)\n\n", A_rows, A_columns);
 	}
 	else if (chosen_variable == 2)
 	{	
-		printf("B = (%dx%d)\n\n", B_rows, B_columns);
+		printf("slot_B = (%dx%d)\n\n", B_rows, B_columns);
 	}
 	else if (chosen_variable == 3)
 	{	
-		printf("C = (%dx%d)\n\n", C_rows, C_columns);
+		printf("slot_C = (%dx%d)\n\n", C_rows, C_columns);
 	}
 }
 
@@ -397,7 +380,7 @@ void input_matrix_identifier(int* matrix[], int user_rows, int user_columns)
 }
 
 /* search matrix by name from matrix.txt file and read it to a variable
-in the program (A or B or C).
+in the program (slot_A or slot_B or slot_C).
 */
 void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int storage_variable)
 {
@@ -410,9 +393,9 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 	int current_matrix_rows = 0;
 	int current_matrix_columns = 0;
 
-	malloc_matrix(&A);	
-	malloc_matrix(&B);
-	malloc_matrix(&C);
+	malloc_matrix(&slot_A);	
+	malloc_matrix(&slot_B);
+	malloc_matrix(&slot_C);
 
 	if (fp != 0)
 	{
@@ -474,7 +457,7 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 						/* put the number in the right matrix as requested by the user */
 						if (storage_variable == 1)
 						{									
-							A[row_index][column_index] = current_number;
+							slot_A[row_index][column_index] = current_number;
 							column_index++;
 
 							if (column_index == current_matrix_columns)
@@ -485,7 +468,7 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 						}
 						else if (storage_variable == 2)
 						{
-							B[row_index][column_index] = current_number;
+							slot_B[row_index][column_index] = current_number;
 							column_index++;
 
 							if (column_index == current_matrix_columns)
@@ -496,7 +479,7 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 						}
 						else if (storage_variable == 3)
 						{
-							C[row_index][column_index] = current_number;
+							slot_C[row_index][column_index] = current_number;
 							column_index++;
 
 							if (column_index == current_matrix_columns)
@@ -518,15 +501,15 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 		/* print the right matrix as requested by the user */
 		if (storage_variable == 1)
 		{
-			print_matrix(A, current_matrix_rows, current_matrix_columns);
+			print_matrix(slot_A, current_matrix_rows, current_matrix_columns);
 		}
 		else if (storage_variable == 2)
 		{
-			print_matrix(B, current_matrix_rows, current_matrix_columns);
+			print_matrix(slot_B, current_matrix_rows, current_matrix_columns);
 		}
 		else if (storage_variable == 3)
 		{
-			print_matrix(C, current_matrix_rows, current_matrix_columns);
+			print_matrix(slot_C, current_matrix_rows, current_matrix_columns);
 		}
 	}
 	else
