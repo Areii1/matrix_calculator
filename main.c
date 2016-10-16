@@ -431,41 +431,25 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 						if (storage_variable == 1)
 						{									
 							slot_A[row_index][column_index] = current_number;
-							column_index++;
-
-							if (column_index == current_matrix_columns)
-							{
-								row_index++;
-								column_index = 0;
-							}
 						}
 						else if (storage_variable == 2)
 						{
 							slot_B[row_index][column_index] = current_number;
-							column_index++;
 
-							if (column_index == current_matrix_columns)
-							{
-								row_index++;
-								column_index = 0;
-							}
 						}
 						else if (storage_variable == 3)
 						{
 							slot_C[row_index][column_index] = current_number;
-							column_index++;
 
-							if (column_index == current_matrix_columns)
-							{
-								row_index++;
-								column_index = 0;
-							}
 						}
-					}
-						
-					if (row_index == MAX_ROWS - 1 && column_index == MAX_COLUMNS - 1)
-					{
-						break;
+
+						column_index++;
+
+						if (column_index == current_matrix_columns)
+						{
+							row_index++;
+							column_index = 0;
+						}
 					}
 				}
 			}
