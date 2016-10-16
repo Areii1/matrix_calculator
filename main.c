@@ -1,10 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <string.h>
 #include "matrix_algebra.h"
 
-#define MAX_ROWS 10
-#define MAX_COLUMNS 10
+#define MAX_ROWS 9
+#define MAX_COLUMNS 9
 
 #define FILENAME "matrix.txt"
 #define MAXSTRLEN 2000
@@ -18,11 +19,13 @@ void malloc_matrix(int*** matrix);
 void read_matrix(void);
 void append_matrix(int* matrix[], char* name, int user_rows, int user_columns);
 void clear_file(void);
-void ask_for_name(int* matrix[]);
+void ask_for_name(int* matrix[], int user_rows, int user_columns);
 void read_matrix_into_variable(char* name, int varibale);
 int count_line_length(char* line);
 
-int A_rows, A_columns, B_rows, B_columns;
+char* itoa(int num, char* str, int base);
+
+int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
 int **A;
 int **B;
 int **C;
@@ -85,14 +88,14 @@ int main(void)
 	initialize_matrix(&A, 1);
 	build_matrix(A, A_rows, A_columns);
 	print_matrix(A, A_rows, A_columns);
-	ask_for_name(A);
+	ask_for_name(A, A_rows, A_columns);
 //-------------------------------------------------------------------
 
 //----------------------- SECOND MATRIX -----------------------------
 	initialize_matrix(&B, 2);
 	build_matrix(B, B_rows, B_columns);
 	print_matrix(B, B_rows, B_columns);
-	ask_for_name(B);
+	ask_for_name(B, B_rows, B_columns);
 //-------------------------------------------------------------------
 
 // -----------------------DESTINATION MATRIX-------------------------
@@ -117,17 +120,17 @@ int main(void)
 		{
 			case 1:
 				add_matrices(A, B, C);
-				print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+				print_matrix(C, A_rows, B_columns);
 				break;
 
 			case 2:
 				substract_matrices(A, B, C);
-				print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+				print_matrix(C, A_rows, B_columns);
 				break;
 
 			case 3:
 				multiply_matrices(A, B, C);
-				print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+				print_matrix(C, A_rows, B_columns);
 				break;
 
 			case 4:
@@ -169,7 +172,7 @@ int main(void)
 		printf("matrix A and B measures do not support the user suggested operation\n");
 	}
 
-	ask_for_name(C);
+	ask_for_name(C, A_rows, B_columns);
 
 	int i;
 	// free unused matrix space
@@ -207,19 +210,13 @@ int build_matrix(int* matrix[], int rows, int columns)
 {
 	int x, y;
 
-	for (y = 0; y < MAX_ROWS; y++)
+	for (y = 0; y < rows; y++)
 	{
-		for (x = 0; x < MAX_COLUMNS; x++)
+		for (x = 0; x < columns; x++)
 		{
-			if ((y >= rows && y < MAX_ROWS) || (x >= columns && x < MAX_COLUMNS))
-			{
-				matrix[y][x] = 0;
-			}
-			else
-{
+
 				printf("element [%d,%d]: ", y, x);
 				scanf("%d", &matrix[y][x]);
-			}
 		}
 	}
 	return 0;
@@ -315,15 +312,17 @@ void append_matrix(int* matrix[], char* name, int user_rows, int user_columns)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
-
-	fprintf(fp, "<%s>=", name);
+	
+	printf("user_rows = %d, user_columns = %d\n", user_rows, user_columns);
+	fprintf(fp, "<%s>", name);
+	fprintf(fp, "(%d,%d)=", user_rows, user_columns);
 	int x, y;
 
 	fputs("{", fp);
-	for (x = 0; x < user_rows; x++)
+	for (y = 0; y < user_rows; y++)
 	{
 		fputs("{", fp);
-		for (y = 0; y < user_columns; y++)
+		for (x = 0; x < user_columns; x++)
 		{
 			fprintf(fp, "%d,", matrix[y][x]);
 		}
@@ -342,12 +341,12 @@ void clear_file(void)
 	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
 
-void ask_for_name(int* matrix[])
+void ask_for_name(int* matrix[], int user_rows, int user_columns)
 {
 	printf("give a one character long name for the matrix\n");
 	char name[1];
 	scanf("%s", &name);
-	append_matrix(matrix, name, MAX_ROWS, MAX_COLUMNS);
+	append_matrix(matrix, name, user_rows, user_columns);
 }
 
 /* search matrix by name from matrix.txt file and read it to a variable
@@ -360,38 +359,58 @@ void read_matrix_into_variable(char* name, int storage_variable)
 	FILE *fp;
 	fp = fopen(FILENAME, "r");
 	char line[MAXSTRLEN];
-	
+
+	int current_matrix_rows = 0;
+	int current_matrix_columns = 0;
+
+	malloc_matrix(&A);	
+	malloc_matrix(&B);
+	malloc_matrix(&C);
+
 	if (fp != 0)
 	{
 		while (fgets(line, sizeof(line), fp) != 0)
 		{
-			if (line[0] == '<' && line[1] == searched_variable_char)
+			/* line[1] has matrix identifier char, check if it matches
+				 the searched character */
+			if (line[1] == searched_variable_char)
 			{
 				int i;
-
 				int row_index = 0;
 				int column_index = 0;
 
 				int line_length = count_line_length(line);
-				
-				printf("line_length = %d\n", line_length);
 
-				malloc_matrix(&A);
+
+				current_matrix_rows = (int)(line[4] - '0');
+				current_matrix_columns = (int)(line[6] - '0');
+				putchar(line[4]);
+				printf("\n");
+				putchar(line[6]);
+				printf("\n");
+
+				printf("current_matrix_rows = %d, current_matrix_columns = %d\n", current_matrix_rows, current_matrix_columns);
 				
 				char current_number_string[20];
 
-				for (i = 0; i < line_length; i++)
+				/* loop the entire line, (one matrix), start after the meta info */
+				for (i = 10; i < line_length; i++)
 				{
 					int x;
+					/* loop through current_number_string to make sure it does not
+						 contain previous garbage values */
 					for (x = 0; x <= 20; x++)
 					{
 						current_number_string[x] = '\0';
 					}
 
-					printf("line[%d] = %d\n", i, line[i]);
 					if (isdigit(line[i]))
 					{
 						int j;
+						/* if the first layer loop detects a digit, go to a second
+							 layer loop that checks if consequent char is also a digit
+							 and assigns the digits onto the string. Loops until it reaches 
+							 a non-digit char */
 						for (j = 0; j < 6; j++)
 						{
 							if (isdigit(line[i + j]))
@@ -400,23 +419,46 @@ void read_matrix_into_variable(char* name, int storage_variable)
 							}
 							else
 							{
-								printf("%d\n", j);
 								current_number_string[j + 1] = '\0';
 								break;
 							}
 						}
+						/* add j to i so the first layer loop continues from the correct spot */
 						i = i + j;
 				
 						int current_number = 0;
+						/* convert and save the current_number_string as an integer */
 						current_number = atoi(current_number_string);
-						printf("current_number_string = %d\n", current_number);
 						
+						/* put the number in the right matrix as requested by the user */
 						if (storage_variable == 1)
 						{									
 							A[row_index][column_index] = current_number;
 							column_index++;
 
-							if (column_index == 10)
+							if (column_index == current_matrix_columns)
+							{
+								row_index++;
+								column_index = 0;
+							}
+						}
+						else if (storage_variable == 2)
+						{
+							B[row_index][column_index] = current_number;
+							column_index++;
+
+							if (column_index == current_matrix_columns)
+							{
+								row_index++;
+								column_index = 0;
+							}
+						}
+						else if (storage_variable == 3)
+						{
+							C[row_index][column_index] = current_number;
+							column_index++;
+
+							if (column_index == current_matrix_columns)
 							{
 								row_index++;
 								column_index = 0;
@@ -424,7 +466,7 @@ void read_matrix_into_variable(char* name, int storage_variable)
 						}
 					}
 						
-					if (row_index == 9 && column_index == 9)
+					if (row_index == MAX_ROWS - 1 && column_index == MAX_COLUMNS - 1)
 					{
 						break;
 					}
@@ -432,7 +474,21 @@ void read_matrix_into_variable(char* name, int storage_variable)
 			}
 		}
 		fclose(fp);
-		print_matrix(A, MAX_ROWS, MAX_COLUMNS);
+
+		/* print the right matrix as requested by the user */
+		printf("matrix rows = %d, matrix columns = %d\n", current_matrix_rows, current_matrix_columns);
+		if (storage_variable == 1)
+		{
+			print_matrix(A, current_matrix_rows, current_matrix_columns);
+		}
+		else if (storage_variable == 2)
+		{
+			print_matrix(B, current_matrix_rows, current_matrix_columns);
+		}
+		else if (storage_variable == 3)
+		{
+			print_matrix(C, current_matrix_rows, current_matrix_columns);
+		}
 	}
 	else
 	{

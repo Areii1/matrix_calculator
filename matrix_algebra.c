@@ -2,8 +2,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#define MAX_ROWS 10
-#define MAX_COLUMNS 10
+#define MAX_ROWS 9
+#define MAX_COLUMNS 9
 
 void add_matrices(int* A[], int* B[], int* C[])
 {
