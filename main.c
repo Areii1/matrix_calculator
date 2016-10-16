@@ -12,23 +12,25 @@
 
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int user_rows, int user_columns);
-void ask_for_measures(int a_or_b);
+void ask_for_measures(int A_B_or_C);
 void initialize_matrix(int*** matrix, int a_or_b);
 void malloc_matrix(int*** matrix);
 
+void get_matrix(int* matrix[], int A_B_or_C);
+
 void read_matrix(void);
-void append_matrix(int* matrix[], char* name, int user_rows, int user_columns);
+void append_matrix(int* matrix[], int user_rows, int user_columns, char* name);
 void clear_file(void);
 void ask_for_name(int* matrix[], int user_rows, int user_columns);
 void read_matrix_into_variable(char* name, int varibale);
 int count_line_length(char* line);
 
-char* itoa(int num, char* str, int base);
-
-int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
-int **A;
-int **B;
-int **C;
+static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
+static int **A;
+static int **B;
+static int **C;
+static int A_B_or_C;
+static char name[1];
 
 int main(void)
 {	
@@ -40,18 +42,23 @@ int main(void)
 		printf("enter a matrix = 1\n");
 		printf("give a statement = 2\n");
 		printf("read a matrix by name, into a variable = 3\n");
+		printf("perform operations on the given matrices = 4\n");
 		printf("print earlier matrix entries = '7'\n");
 		printf("delete earlier matrix entries = '8'\n");
 		printf("exit program = '9'\n");
 		printf("---------------------------------------------------------------------------\n");
 		
 		char matrix_name[1];
-		int A_B_or_C;
 
 		scanf("%d", &user_value);
 		switch (user_value)
 		{
 			case 1:
+				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
+				scanf("%d", &A_B_or_C);
+
+				get_matrix(A, A_B_or_C);
+				
 				break;
 
 			case 2:
@@ -68,6 +75,81 @@ int main(void)
 
 				read_matrix_into_variable(matrix_name, A_B_or_C);
 				break;
+
+			case 4:
+
+/*
+				printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
+				scanf("%d", &user_value);
+
+				//check for matrix measure legality for certain operations
+				if (((user_value == 1 || user_value == 2) && (A_rows == B_rows && A_columns == B_columns))
+						|| (user_value == 3 && A_columns == B_rows)
+						|| (user_value == 4)
+						)
+				{
+				//execute the process determinde by user_value
+
+					int user_choice;
+					int choice_conflict = 0;
+
+					switch (user_value)
+					{
+						case 1:
+							add_matrices(A, B, C);
+							print_matrix(C, A_rows, B_columns);
+							break;
+
+						case 2:
+							substract_matrices(A, B, C);
+							print_matrix(C, A_rows, B_columns);
+							break;
+
+						case 3:
+							multiply_matrices(A, B, C);
+							print_matrix(C, A_rows, B_columns);
+							break;
+
+						case 4:
+							printf("transpose A = 1, B = 2\n");
+
+							do
+							{
+								scanf("%d", &user_choice);
+								
+								if (user_choice == 1)
+								{
+									transpose_matrix(A, C);
+									print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+									choice_conflict = 0;
+								}
+								else if (user_choice == 2)
+								{
+									transpose_matrix(B, C);
+									print_matrix(C, MAX_ROWS, MAX_COLUMNS);
+									choice_conflict = 0;
+								}
+								else
+								{
+									printf("did not recognize '%d', A = 1, B = 2\n", user_choice);
+									choice_conflict = 1;
+								}
+							} while (choice_conflict == 1);
+							break;
+
+						default:
+							printf("user value not regonized\n");
+							break;
+					}
+				}
+				else
+				{
+					printf("matrix A and B measures do not support the user suggested operation\n");
+				}
+
+				
+				break;
+*/
 			case 7:
 				read_matrix();
 				break;
@@ -77,102 +159,13 @@ int main(void)
 				break;
 
 			case 9:
-				exit(0);
+				break;
 
 			default:
 				printf("value ('%d') not recognized\n", user_value);
 		}
-	} while (user_value != 1);
+	} while (user_value != 9);
 
-// ----------------------FIRST MATRIX -------------------------------
-	initialize_matrix(&A, 1);
-	build_matrix(A, A_rows, A_columns);
-	print_matrix(A, A_rows, A_columns);
-	ask_for_name(A, A_rows, A_columns);
-//-------------------------------------------------------------------
-
-//----------------------- SECOND MATRIX -----------------------------
-	initialize_matrix(&B, 2);
-	build_matrix(B, B_rows, B_columns);
-	print_matrix(B, B_rows, B_columns);
-	ask_for_name(B, B_rows, B_columns);
-//-------------------------------------------------------------------
-
-// -----------------------DESTINATION MATRIX-------------------------
-	malloc_matrix(&C);
-//------------------------------------------------------------------
-
-	printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
-	scanf("%d", &user_value);
-
-	//check for matrix measure legality for certain operations
-	if (((user_value == 1 || user_value == 2) && (A_rows == B_rows && A_columns == B_columns))
-			|| (user_value == 3 && A_columns == B_rows)
-			|| (user_value == 4)
-			)
-	{
-	//execute the process determinde by user_value
-
-		int user_choice;
-		int choice_conflict = 0;
-
-		switch (user_value)
-		{
-			case 1:
-				add_matrices(A, B, C);
-				print_matrix(C, A_rows, B_columns);
-				break;
-
-			case 2:
-				substract_matrices(A, B, C);
-				print_matrix(C, A_rows, B_columns);
-				break;
-
-			case 3:
-				multiply_matrices(A, B, C);
-				print_matrix(C, A_rows, B_columns);
-				break;
-
-			case 4:
-			//	int user_choice;
-			//	int choice_conflict = 0;
-				printf("transpose A = 1, B = 2\n");
-
-				do
-				{
-					scanf("%d", &user_choice);
-					
-					if (user_choice == 1)
-					{
-						transpose_matrix(A, C);
-						print_matrix(C, MAX_ROWS, MAX_COLUMNS);
-						choice_conflict = 0;
-					}
-					else if (user_choice == 2)
-					{
-						transpose_matrix(B, C);
-						print_matrix(C, MAX_ROWS, MAX_COLUMNS);
-						choice_conflict = 0;
-					}
-					else
-					{
-						printf("did not recognize '%d', A = 1, B = 2\n", user_choice);
-						choice_conflict = 1;
-					}
-				} while (choice_conflict == 1);
-				break;
-
-			default:
-				printf("user value not regonized\n");
-				break;
-		}
-	}
-	else
-	{
-		printf("matrix A and B measures do not support the user suggested operation\n");
-	}
-
-	ask_for_name(C, A_rows, B_columns);
 
 	int i;
 	// free unused matrix space
@@ -189,18 +182,50 @@ int main(void)
 	return 0;
 }
 
-void initialize_matrix(int*** matrix, int a_or_b)
+void get_matrix(int* matrix[], int A_B_or_C)
+{
+	if (A_B_or_C == 1)
+	{
+		initialize_matrix(&A, 1);
+		build_matrix(A, A_rows, A_columns);
+		print_matrix(A, A_rows, A_columns);
+		ask_for_name(A, A_rows, A_columns);
+		append_matrix(A, A_rows, A_columns, name);
+	}
+	else if (A_B_or_C == 2)
+	{
+		initialize_matrix(&B, 2);
+		build_matrix(B, B_rows, B_columns);
+		print_matrix(B, B_rows, B_columns);
+		ask_for_name(B, B_rows, B_columns);
+		append_matrix(B, B_rows, B_columns, name);
+	}
+	else if (A_B_or_C == 3)
+	{
+		initialize_matrix(&C, 3);
+		build_matrix(C, C_rows, C_columns);
+		print_matrix(C, C_rows, C_columns);
+		ask_for_name(C, C_rows, C_columns);
+		append_matrix(C, C_rows, C_columns, name);
+	}
+}
+	
+void initialize_matrix(int*** matrix, int A_B_or_C)
 {
 	// probe for measures on matrix A
-	ask_for_measures(a_or_b);
+	ask_for_measures(A_B_or_C);
 	
-	if (a_or_b == 1)
+	if (A_B_or_C == 1)
 	{
 		printf("A = (%dx%d)\n\n", A_rows, A_columns);
 	}
-	else if (a_or_b == 2)
+	else if (A_B_or_C == 2)
 	{	
 		printf("B = (%dx%d)\n\n", B_rows, B_columns);
+	}
+	else if (A_B_or_C == 3)
+	{	
+		printf("C = (%dx%d)\n\n", C_rows, C_columns);
 	}
 
 	malloc_matrix(matrix);
@@ -239,13 +264,13 @@ void print_matrix(int* matrix[], int user_rows, int user_columns)
 	printf("___________________________________________________________________\n\n");
 }
 
-void ask_for_measures(int a_or_b)
+void ask_for_measures(int A_B_or_C)
 {
 	int measure_conflict = 0;
 
 	do 
 	{
-		if (a_or_b == 1)
+		if (A_B_or_C == 1)
 		{
 			printf("A #rows: ");
 			scanf("%d", &A_rows);
@@ -259,7 +284,7 @@ void ask_for_measures(int a_or_b)
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 			}
 		}
-		else if (a_or_b == 2) 
+		else if (A_B_or_C == 2) 
 		{
 			printf("B #rows: ");
 			scanf("%d", &B_rows);
@@ -268,6 +293,20 @@ void ask_for_measures(int a_or_b)
 			measure_conflict = 0;
 
 			if (B_rows > MAX_ROWS || B_columns > MAX_COLUMNS)
+			{
+				measure_conflict = 1;
+				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
+			}
+		}
+		else if (A_B_or_C = 3) 
+		{
+			printf("C #rows: ");
+			scanf("%d", &C_rows);
+			printf("C #columns: ");
+			scanf("%d", &C_columns);
+			measure_conflict = 0;
+
+			if (C_rows > MAX_ROWS || C_columns > MAX_COLUMNS)
 			{
 				measure_conflict = 1;
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
@@ -308,12 +347,12 @@ void read_matrix(void)
 	}
 }
 
-void append_matrix(int* matrix[], char* name, int user_rows, int user_columns)
+void append_matrix(int* matrix[], int user_rows, int user_columns, char* name)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 	
-	printf("user_rows = %d, user_columns = %d\n", user_rows, user_columns);
+	fflush(fp);
 	fprintf(fp, "<%s>", name);
 	fprintf(fp, "(%d,%d)=", user_rows, user_columns);
 	int x, y;
@@ -330,6 +369,8 @@ void append_matrix(int* matrix[], char* name, int user_rows, int user_columns)
 	}
 	fputs("}", fp);
 	fputs("|\n", fp);
+
+	fclose(fp);
 }
 
 void clear_file(void)
@@ -344,9 +385,7 @@ void clear_file(void)
 void ask_for_name(int* matrix[], int user_rows, int user_columns)
 {
 	printf("give a one character long name for the matrix\n");
-	char name[1];
-	scanf("%s", &name);
-	append_matrix(matrix, name, user_rows, user_columns);
+	scanf("%s", name);
 }
 
 /* search matrix by name from matrix.txt file and read it to a variable
@@ -384,12 +423,6 @@ void read_matrix_into_variable(char* name, int storage_variable)
 
 				current_matrix_rows = (int)(line[4] - '0');
 				current_matrix_columns = (int)(line[6] - '0');
-				putchar(line[4]);
-				printf("\n");
-				putchar(line[6]);
-				printf("\n");
-
-				printf("current_matrix_rows = %d, current_matrix_columns = %d\n", current_matrix_rows, current_matrix_columns);
 				
 				char current_number_string[20];
 
@@ -473,10 +506,8 @@ void read_matrix_into_variable(char* name, int storage_variable)
 				}
 			}
 		}
-		fclose(fp);
 
 		/* print the right matrix as requested by the user */
-		printf("matrix rows = %d, matrix columns = %d\n", current_matrix_rows, current_matrix_columns);
 		if (storage_variable == 1)
 		{
 			print_matrix(A, current_matrix_rows, current_matrix_columns);
@@ -494,6 +525,8 @@ void read_matrix_into_variable(char* name, int storage_variable)
 	{
 		printf("File %s cannot be opened!\n", FILENAME);
 	}
+
+	fclose(fp);
 }
 
 int count_line_length(char* line)
