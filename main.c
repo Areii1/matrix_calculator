@@ -243,65 +243,38 @@ void input_matrix_measures(int chosen_variable)
 {
 	int measure_conflict = 0;
 
-	
-	printf("#rows: ");
-	scanf("%d", &chosen_variable_rows);
-	printf("#columns: ");
-	scanf("%d", &chosen_variable_columns);
-	do 
+	do
 	{
-		if (chosen_variable == 1)
+		printf("#rows: ");
+		scanf("%d", &chosen_variable_rows);
+		printf("#columns: ");
+		scanf("%d", &chosen_variable_columns);	
+		
+		if (chosen_variable_rows > MAX_ROWS || chosen_variable_columns > MAX_COLUMNS)
 		{
-			A_rows = chosen_variable_rows;
-			A_columns = chosen_variable_columns;
-
-			measure_conflict = 0;
-
-			if (A_rows > MAX_ROWS || A_columns > MAX_COLUMNS)
-			{
-				measure_conflict = 1;
-				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
-			}
+			measure_conflict = 1;
+			printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 		}
-		else if (chosen_variable == 2) 
-		{
-			B_rows = chosen_variable_rows;
-			B_columns = chosen_variable_columns;
-			
-			measure_conflict = 0;
 
-			if (B_rows > MAX_ROWS || B_columns > MAX_COLUMNS)
-			{
-				measure_conflict = 1;
-				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
-			}
-		}
-		else if (chosen_variable = 3) 
-		{
-			C_rows = chosen_variable_rows;
-			C_columns = chosen_variable_columns;
-			
-			measure_conflict = 0;
-
-			if (C_rows > MAX_ROWS || C_columns > MAX_COLUMNS)
-			{
-				measure_conflict = 1;
-				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
-			}
-		}
 	} while (measure_conflict == 1);
 	
-	/* print the measures */
+	/* print and save the measures */
 	if (chosen_variable == 1)
 	{
+		A_rows = chosen_variable_rows;
+		A_columns = chosen_variable_columns;
 		printf("slot_A = (%dx%d)\n\n", A_rows, A_columns);
 	}
 	else if (chosen_variable == 2)
 	{	
+		B_rows = chosen_variable_rows;
+		B_columns = chosen_variable_columns;
 		printf("slot_B = (%dx%d)\n\n", B_rows, B_columns);
 	}
 	else if (chosen_variable == 3)
 	{	
+		C_rows = chosen_variable_rows;
+		C_columns = chosen_variable_columns;
 		printf("slot_C = (%dx%d)\n\n", C_rows, C_columns);
 	}
 }
