@@ -12,7 +12,6 @@
 
 /* matrix building related functions */
 void get_matrix(int* matrix[], int chosen_variable);
-void initialize_matrix(int*** matrix, int a_or_b);
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int user_rows, int user_columns);
 void malloc_matrix(int*** matrix);
@@ -190,7 +189,8 @@ void get_matrix(int* matrix[], int chosen_variable)
 {
 	if (chosen_variable == 1)
 	{
-		initialize_matrix(&A, 1);
+		input_matrix_measures(chosen_variable);
+		malloc_matrix(&A);
 		build_matrix(A, A_rows, A_columns);
 		print_matrix(A, A_rows, A_columns);
 		input_matrix_identifier(A, A_rows, A_columns);
@@ -198,7 +198,8 @@ void get_matrix(int* matrix[], int chosen_variable)
 	}
 	else if (chosen_variable == 2)
 	{
-		initialize_matrix(&B, 2);
+		input_matrix_measures(chosen_variable);
+		malloc_matrix(&B);
 		build_matrix(B, B_rows, B_columns);
 		print_matrix(B, B_rows, B_columns);
 		input_matrix_identifier(B, B_rows, B_columns);
@@ -206,35 +207,24 @@ void get_matrix(int* matrix[], int chosen_variable)
 	}
 	else if (chosen_variable == 3)
 	{
-		initialize_matrix(&C, 3);
+		input_matrix_measures(chosen_variable);
+		malloc_matrix(&C);
 		build_matrix(C, C_rows, C_columns);
 		print_matrix(C, C_rows, C_columns);
 		input_matrix_identifier(C, C_rows, C_columns);
 		write_matrix_to_file(C, C_rows, C_columns, assigned_matrix_identifier);
 	}
 }
-	
-void initialize_matrix(int*** matrix, int chosen_variable)
+/*
+void complete_matrix(int* matrix[])
 {
-	// probe for measures on matrix A
-	input_matrix_measures(chosen_variable);
-	
-	if (chosen_variable == 1)
-	{
-		printf("A = (%dx%d)\n\n", A_rows, A_columns);
-	}
-	else if (chosen_variable == 2)
-	{	
-		printf("B = (%dx%d)\n\n", B_rows, B_columns);
-	}
-	else if (chosen_variable == 3)
-	{	
-		printf("C = (%dx%d)\n\n", C_rows, C_columns);
-	}
-
-	malloc_matrix(matrix);
+		initialize_matrix(&matrix, chosen_variable);
+		build_matrix(matrix, A_rows, A_columns);
+		print_matrix(matrix, A_rows, A_columns);
+		input_matrix_identifier(matrix, A_rows, A_columns);
+		write_matrix_to_file(matrix, A_rows, A_columns, assigned_matrix_identifier);
 }
-
+*/
 int build_matrix(int* matrix[], int rows, int columns)
 {
 	int x, y;
@@ -317,6 +307,20 @@ void input_matrix_measures(int chosen_variable)
 			}
 		}
 	} while (measure_conflict == 1);
+	
+	/* print the measures */
+	if (chosen_variable == 1)
+	{
+		printf("A = (%dx%d)\n\n", A_rows, A_columns);
+	}
+	else if (chosen_variable == 2)
+	{	
+		printf("B = (%dx%d)\n\n", B_rows, B_columns);
+	}
+	else if (chosen_variable == 3)
+	{	
+		printf("C = (%dx%d)\n\n", C_rows, C_columns);
+	}
 }
 
 void malloc_matrix(int*** matrix)
