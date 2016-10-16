@@ -10,31 +10,36 @@
 #define FILENAME "matrix.txt"
 #define MAXSTRLEN 2000
 
+/* matrix building related functions */
+void get_matrix(int* matrix[], int chosen_variable);
+void initialize_matrix(int*** matrix, int a_or_b);
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int user_rows, int user_columns);
-void ask_for_measures(int A_B_or_C);
-void initialize_matrix(int*** matrix, int a_or_b);
 void malloc_matrix(int*** matrix);
 
-void get_matrix(int* matrix[], int A_B_or_C);
+/* file handling related functions */
+void write_matrix_to_file(int* matrix[], int user_rows, int user_columns, char* assigned_matrix_identifier);
+void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int varibale);
+void clear_matrix_file(void);
+void print_matrix_file(void);
 
-void read_matrix(void);
-void append_matrix(int* matrix[], int user_rows, int user_columns, char* name);
-void clear_file(void);
-void ask_for_name(int* matrix[], int user_rows, int user_columns);
-void read_matrix_into_variable(char* name, int varibale);
+/* user related functions */
+void input_matrix_measures(int chosen_variable);
+void input_matrix_identifier(int* matrix[], int user_rows, int user_columns);
+
 int count_line_length(char* line);
 
 static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
 static int **A;
 static int **B;
 static int **C;
-static int A_B_or_C;
-static char name[1];
+static int chosen_variable;
+static char assigned_matrix_identifier[1];
+static char searched_matrix_identifier[1];
 
 int main(void)
 {	
-	int user_value;
+	int user_choice;
 
 	do 
 	{
@@ -48,16 +53,15 @@ int main(void)
 		printf("exit program = '9'\n");
 		printf("---------------------------------------------------------------------------\n");
 		
-		char matrix_name[1];
 
-		scanf("%d", &user_value);
-		switch (user_value)
+		scanf("%d", &user_choice);
+		switch (user_choice)
 		{
 			case 1:
 				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
-				scanf("%d", &A_B_or_C);
+				scanf("%d", &chosen_variable);
 
-				get_matrix(A, A_B_or_C);
+				get_matrix(A, chosen_variable);
 				
 				break;
 
@@ -68,32 +72,32 @@ int main(void)
 			case 3:
 
 				printf("variable name to search?\n");
-				scanf("%s", &matrix_name);
+				scanf("%s", &searched_matrix_identifier);
 
 				printf("variable index to put in? 'A' = 1, 'B' = 2, 'C' = 3\n");
-				scanf("%d", &A_B_or_C);
+				scanf("%d", &chosen_variable);
 
-				read_matrix_into_variable(matrix_name, A_B_or_C);
+				read_matrix_from_file_into_variable(searched_matrix_identifier, chosen_variable);
 				break;
 
 			case 4:
 
 /*
 				printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
-				scanf("%d", &user_value);
+				scanf("%d", &user_choice);
 
 				//check for matrix measure legality for certain operations
-				if (((user_value == 1 || user_value == 2) && (A_rows == B_rows && A_columns == B_columns))
-						|| (user_value == 3 && A_columns == B_rows)
-						|| (user_value == 4)
+				if (((user_choice == 1 || user_choice == 2) && (A_rows == B_rows && A_columns == B_columns))
+						|| (user_choice == 3 && A_columns == B_rows)
+						|| (user_choice == 4)
 						)
 				{
-				//execute the process determinde by user_value
+				//execute the process determinde by user_choice
 
 					int user_choice;
 					int choice_conflict = 0;
 
-					switch (user_value)
+					switch (user_choice)
 					{
 						case 1:
 							add_matrices(A, B, C);
@@ -151,20 +155,20 @@ int main(void)
 				break;
 */
 			case 7:
-				read_matrix();
+				print_matrix_file();
 				break;
 
 			case 8:
-				clear_file();	
+				clear_matrix_file();	
 				break;
 
 			case 9:
 				break;
 
 			default:
-				printf("value ('%d') not recognized\n", user_value);
+				printf("value ('%d') not recognized\n", user_choice);
 		}
-	} while (user_value != 9);
+	} while (user_choice != 9);
 
 
 	int i;
@@ -182,48 +186,48 @@ int main(void)
 	return 0;
 }
 
-void get_matrix(int* matrix[], int A_B_or_C)
+void get_matrix(int* matrix[], int chosen_variable)
 {
-	if (A_B_or_C == 1)
+	if (chosen_variable == 1)
 	{
 		initialize_matrix(&A, 1);
 		build_matrix(A, A_rows, A_columns);
 		print_matrix(A, A_rows, A_columns);
-		ask_for_name(A, A_rows, A_columns);
-		append_matrix(A, A_rows, A_columns, name);
+		input_matrix_identifier(A, A_rows, A_columns);
+		write_matrix_to_file(A, A_rows, A_columns, assigned_matrix_identifier);
 	}
-	else if (A_B_or_C == 2)
+	else if (chosen_variable == 2)
 	{
 		initialize_matrix(&B, 2);
 		build_matrix(B, B_rows, B_columns);
 		print_matrix(B, B_rows, B_columns);
-		ask_for_name(B, B_rows, B_columns);
-		append_matrix(B, B_rows, B_columns, name);
+		input_matrix_identifier(B, B_rows, B_columns);
+		write_matrix_to_file(B, B_rows, B_columns, assigned_matrix_identifier);
 	}
-	else if (A_B_or_C == 3)
+	else if (chosen_variable == 3)
 	{
 		initialize_matrix(&C, 3);
 		build_matrix(C, C_rows, C_columns);
 		print_matrix(C, C_rows, C_columns);
-		ask_for_name(C, C_rows, C_columns);
-		append_matrix(C, C_rows, C_columns, name);
+		input_matrix_identifier(C, C_rows, C_columns);
+		write_matrix_to_file(C, C_rows, C_columns, assigned_matrix_identifier);
 	}
 }
 	
-void initialize_matrix(int*** matrix, int A_B_or_C)
+void initialize_matrix(int*** matrix, int chosen_variable)
 {
 	// probe for measures on matrix A
-	ask_for_measures(A_B_or_C);
+	input_matrix_measures(chosen_variable);
 	
-	if (A_B_or_C == 1)
+	if (chosen_variable == 1)
 	{
 		printf("A = (%dx%d)\n\n", A_rows, A_columns);
 	}
-	else if (A_B_or_C == 2)
+	else if (chosen_variable == 2)
 	{	
 		printf("B = (%dx%d)\n\n", B_rows, B_columns);
 	}
-	else if (A_B_or_C == 3)
+	else if (chosen_variable == 3)
 	{	
 		printf("C = (%dx%d)\n\n", C_rows, C_columns);
 	}
@@ -264,13 +268,13 @@ void print_matrix(int* matrix[], int user_rows, int user_columns)
 	printf("___________________________________________________________________\n\n");
 }
 
-void ask_for_measures(int A_B_or_C)
+void input_matrix_measures(int chosen_variable)
 {
 	int measure_conflict = 0;
 
 	do 
 	{
-		if (A_B_or_C == 1)
+		if (chosen_variable == 1)
 		{
 			printf("A #rows: ");
 			scanf("%d", &A_rows);
@@ -284,7 +288,7 @@ void ask_for_measures(int A_B_or_C)
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 			}
 		}
-		else if (A_B_or_C == 2) 
+		else if (chosen_variable == 2) 
 		{
 			printf("B #rows: ");
 			scanf("%d", &B_rows);
@@ -298,7 +302,7 @@ void ask_for_measures(int A_B_or_C)
 				printf("MAX_ROWS = %d, MAX_COLUMS = %d... try again\n", MAX_ROWS, MAX_COLUMNS);
 			}
 		}
-		else if (A_B_or_C = 3) 
+		else if (chosen_variable = 3) 
 		{
 			printf("C #rows: ");
 			scanf("%d", &C_rows);
@@ -327,7 +331,7 @@ void malloc_matrix(int*** matrix)
 }
 
 
-void read_matrix(void)
+void print_matrix_file(void)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "r");
@@ -347,13 +351,13 @@ void read_matrix(void)
 	}
 }
 
-void append_matrix(int* matrix[], int user_rows, int user_columns, char* name)
+void write_matrix_to_file(int* matrix[], int user_rows, int user_columns, char* assigned_matrix_identifier)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 	
 	fflush(fp);
-	fprintf(fp, "<%s>", name);
+	fprintf(fp, "<%s>", assigned_matrix_identifier);
 	fprintf(fp, "(%d,%d)=", user_rows, user_columns);
 	int x, y;
 
@@ -373,7 +377,7 @@ void append_matrix(int* matrix[], int user_rows, int user_columns, char* name)
 	fclose(fp);
 }
 
-void clear_file(void)
+void clear_matrix_file(void)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "w");
@@ -382,18 +386,18 @@ void clear_file(void)
 	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
 
-void ask_for_name(int* matrix[], int user_rows, int user_columns)
+void input_matrix_identifier(int* matrix[], int user_rows, int user_columns)
 {
 	printf("give a one character long name for the matrix\n");
-	scanf("%s", name);
+	scanf("%s", assigned_matrix_identifier);
 }
 
 /* search matrix by name from matrix.txt file and read it to a variable
 in the program (A or B or C).
 */
-void read_matrix_into_variable(char* name, int storage_variable)
+void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int storage_variable)
 {
-	char searched_variable_char = name[0];
+	char searched_variable_char = assigned_matrix_identifier[0];
 
 	FILE *fp;
 	fp = fopen(FILENAME, "r");
