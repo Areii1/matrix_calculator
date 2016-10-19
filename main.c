@@ -12,24 +12,24 @@
 
 /* matrix building related functions */
 void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_identifier);
-int build_matrix(int* matrix[], int rows, int columns);
-void print_matrix(int* matrix[], int user_rows, int user_columns);
+int build_matrix(int* matrix[]);
+void print_matrix(int* matrix[], int rows, int columns);
 void malloc_matrix(int*** matrix);
 
 /* file handling related functions */
-void write_matrix_to_file(int* matrix[], int user_rows, int user_columns, char* assigned_matrix_identifier);
-void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int varibale);
+void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier);
+void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int chosen_variable);
 void clear_matrix_file(void);
 void print_matrix_file(void);
 
 /* user related functions */
 void input_matrix_measures(int chosen_variable);
-void input_matrix_identifier(int* matrix[], char* assigned_matrix_identifier, 
-		int user_rows, int user_columns);
+void input_matrix_identifier(char* assigned_matrix_identifier);
 
 int count_line_length(char* line);
 
-static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns, chosen_variable_rows, chosen_variable_columns;
+static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
+int chosen_variable_rows, chosen_variable_columns;
 static int **slot_A;
 static int **slot_B;
 static int **slot_C;
@@ -202,20 +202,19 @@ void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_i
 {
 		input_matrix_measures(chosen_variable);
 		malloc_matrix(&slot_A);
-		build_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
+		build_matrix(slot_A);
 		print_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
-		input_matrix_identifier(slot_A, assigned_matrix_identifier,
-				chosen_variable_rows, chosen_variable_columns);
-		write_matrix_to_file(slot_A, chosen_variable_rows, chosen_variable_columns, assigned_matrix_identifier);
+		input_matrix_identifier(assigned_matrix_identifier);
+		write_matrix_to_file(slot_A, assigned_matrix_identifier);
 }
 
-int build_matrix(int* matrix[], int rows, int columns)
+int build_matrix(int* matrix[])
 {
 	int x, y;
 
-	for (y = 0; y < rows; y++)
+	for (y = 0; y < chosen_variable_rows; y++)
 	{
-		for (x = 0; x < columns; x++)
+		for (x = 0; x < chosen_variable_columns; x++)
 		{
 
 				printf("element [%d,%d]: ", y, x);
@@ -225,15 +224,15 @@ int build_matrix(int* matrix[], int rows, int columns)
 	return 0;
 }
 
-void print_matrix(int* matrix[], int user_rows, int user_columns)
+void print_matrix(int* matrix[], int rows, int columns)
 {
 	int y, x;	
 	
 	printf("___________________________________________________________________\n");
-	for (y = 0; y < user_rows; y++)
+	for (y = 0; y < rows; y++)
 	{
 		printf("\n");
-		for (x = 0; x < user_columns; x++)
+		for (x = 0; x < columns; x++)
 		{
 			printf("%d\t", matrix[y][x]);
 		}
@@ -314,21 +313,21 @@ void print_matrix_file(void)
 	}
 }
 
-void write_matrix_to_file(int* matrix[], int user_rows, int user_columns, char* assigned_matrix_identifier)
+void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 	
 	fflush(fp);
 	fprintf(fp, "<%s>", assigned_matrix_identifier);
-	fprintf(fp, "(%d,%d)=", user_rows, user_columns);
+	fprintf(fp, "(%d,%d)=", chosen_variable_rows, chosen_variable_columns);
 	int x, y;
 
 	fputs("{", fp);
-	for (y = 0; y < user_rows; y++)
+	for (y = 0; y < chosen_variable_rows; y++)
 	{
 		fputs("{", fp);
-		for (x = 0; x < user_columns; x++)
+		for (x = 0; x < chosen_variable_columns; x++)
 		{
 			fprintf(fp, "%d,", matrix[y][x]);
 		}
@@ -349,8 +348,7 @@ void clear_matrix_file(void)
 	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
 
-void input_matrix_identifier(int* matrix[], char* assigned_matrix_identifier,
-		int user_rows, int user_columns)
+void input_matrix_identifier(char* assigned_matrix_identifier)
 {
 	printf("give a one character long name for the matrix\n");
 	scanf("%s", assigned_matrix_identifier);
