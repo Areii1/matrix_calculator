@@ -30,11 +30,12 @@ void input_matrix_identifier(char* assigned_matrix_identifier);
 
 int count_line_length(char* line);
 
-static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
+static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns, extra_rows, extra_columns;
 static int chosen_variable_rows, chosen_variable_columns;
 static int **slot_A;
 static int **slot_B;
 static int **slot_C;
+static int **slot_extra;
 
 int main(void)
 {	
@@ -48,7 +49,8 @@ int main(void)
 	malloc_matrix(&slot_A);
 	malloc_matrix(&slot_B);
 	malloc_matrix(&slot_C);
-	
+	malloc_matrix(&slot_extra);
+
 	do 
 	{
 		printf("------------------------ USER OPTIONS -------------------------------------\n");
@@ -56,8 +58,8 @@ int main(void)
 		printf("give a statement = '2'\n");
 		printf("read a matrix by name, into a variable = '3'\n");
 		printf("perform operations on the given matrices = '4'\n");
-		printf("print something = '7'\n");
-		printf("delete something = '8'\n");
+		printf("print options = '7'\n");
+		printf("delete options = '8'\n");
 		printf("exit program = '9'\n");
 		printf("---------------------------------------------------------------------------\n");
 		
@@ -170,9 +172,9 @@ int main(void)
 					printf("matrix slot_A and slot_B measures do not support the user suggested operation\n");
 				}
 
-				
+			*/	
 				break;
-*/
+
 			case 7:
 
 	
@@ -183,8 +185,15 @@ int main(void)
 				printf("---------------------------------------------------------------------------\n");
 	
 				scanf("%d", &user_choice_layer_2);
-				
-				if (user_choice_layer_2 ==  2)
+			
+				if (user_choice_layer_2 == 1)
+				{
+					printf("provide name of the matrix\n");
+					scanf("%s", searched_matrix_identifier);
+					read_matrix_from_file_into_variable(searched_matrix_identifier, 4);
+					print_matrix(slot_extra, extra_rows, extra_columns);
+				}
+				else if (user_choice_layer_2 ==  2)
 				{
 					print_all_matrices_in_file_format();
 				}
@@ -197,6 +206,7 @@ int main(void)
 					printf("MATRIX C\n\n");
 					print_matrix(slot_C, C_rows, C_columns);
 				}
+
 				break;
 
 			case 8:
@@ -212,6 +222,7 @@ int main(void)
 				{
 					clear_matrix_file();	
 				}
+
 				break;
 
 			case 9:
@@ -225,7 +236,8 @@ int main(void)
 	free_matrix_space(slot_A);
 	free_matrix_space(slot_B);
 	free_matrix_space(slot_C);
-
+	free_matrix_space(slot_extra);
+	
 	return 0;
 }
 
@@ -479,12 +491,14 @@ void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int c
 						else if (chosen_variable == 2)
 						{
 							slot_B[row_index][column_index] = current_number;
-
 						}
 						else if (chosen_variable == 3)
 						{
 							slot_C[row_index][column_index] = current_number;
-
+						}
+						else if (chosen_variable == 4)
+						{
+							slot_extra[row_index][column_index] = current_number;
 						}
 
 						column_index++;
@@ -502,15 +516,26 @@ void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int c
 		/* print the right matrix as requested by the user */
 		if (chosen_variable == 1)
 		{
+			A_rows = current_matrix_rows;
+			A_columns = current_matrix_columns;
 			print_matrix(slot_A, current_matrix_rows, current_matrix_columns);
 		}
 		else if (chosen_variable == 2)
 		{
+			B_rows = current_matrix_rows;
+			B_columns = current_matrix_columns;
 			print_matrix(slot_B, current_matrix_rows, current_matrix_columns);
 		}
 		else if (chosen_variable == 3)
 		{
+			C_rows = current_matrix_rows;
+			C_columns = current_matrix_columns;
 			print_matrix(slot_C, current_matrix_rows, current_matrix_columns);
+		}
+		else if (chosen_variable == 4)
+		{
+			extra_rows = current_matrix_rows;
+			extra_columns = current_matrix_columns;
 		}
 	}
 	else
@@ -536,3 +561,6 @@ int count_line_length(char* line)
 	}
 	return -1;
 }
+
+
+
