@@ -15,10 +15,11 @@ void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_i
 int build_matrix(int* matrix[]);
 void print_matrix(int* matrix[], int rows, int columns);
 void malloc_matrix(int*** matrix);
+void free_matrix_space(int** matrix);
 
 /* file handling related functions */
 void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier);
-void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int chosen_variable);
+void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int chosen_variable);
 void clear_matrix_file(void);
 void print_matrix_file(void);
 
@@ -29,7 +30,7 @@ void input_matrix_identifier(char* assigned_matrix_identifier);
 int count_line_length(char* line);
 
 static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
-int chosen_variable_rows, chosen_variable_columns;
+static int chosen_variable_rows, chosen_variable_columns;
 static int **slot_A;
 static int **slot_B;
 static int **slot_C;
@@ -42,6 +43,10 @@ int main(void)
 	static char searched_matrix_identifier[1];
 	static char assigned_matrix_identifier[1];
 
+	malloc_matrix(&slot_A);
+	malloc_matrix(&slot_B);
+	malloc_matrix(&slot_C);
+	
 	do 
 	{
 		printf("------------------------ USER OPTIONS -------------------------------------\n");
@@ -84,7 +89,7 @@ int main(void)
 			case 3:
 
 				printf("variable name to search?\n");
-				scanf("%s", &searched_matrix_identifier);
+				scanf("%s", searched_matrix_identifier);
 
 				printf("variable index to put in? 'slot_A' = 1, 'slot_B' = 2, 'slot_C' = 3\n");
 				scanf("%d", &chosen_variable);
@@ -182,30 +187,21 @@ int main(void)
 		}
 	} while (user_choice != 9);
 
+	free_matrix_space(slot_A);
+	free_matrix_space(slot_B);
+	free_matrix_space(slot_C);
 
-	int i;
-	// free unused matrix space
-	for (i = 0; i < MAX_ROWS; i++)
-	{
-		free(slot_A[i]);
-		free(slot_B[i]);
-		free(slot_C[i]);
-	}
-	free(slot_A);
-	free(slot_B);
-	free(slot_C);
-	
 	return 0;
 }
 
 void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_identifier)
 {
 		input_matrix_measures(chosen_variable);
-		malloc_matrix(&slot_A);
-		build_matrix(slot_A);
-		print_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
+//		malloc_matrix(&matrix);
+		build_matrix(matrix);
+		print_matrix(matrix, chosen_variable_rows, chosen_variable_columns);
 		input_matrix_identifier(assigned_matrix_identifier);
-		write_matrix_to_file(slot_A, assigned_matrix_identifier);
+		write_matrix_to_file(matrix, assigned_matrix_identifier);
 }
 
 int build_matrix(int* matrix[])
@@ -279,6 +275,17 @@ void input_matrix_measures(int chosen_variable)
 		C_columns = chosen_variable_columns;
 		printf("slot_C = (%dx%d)\n\n", C_rows, C_columns);
 	}
+}
+
+void free_matrix_space(int** matrix)
+{
+	int i;
+
+	for (i = 0; i < MAX_ROWS; i++)
+	{
+		free(matrix[i]);
+	}
+	free(matrix);
 }
 
 void malloc_matrix(int*** matrix)
@@ -357,9 +364,9 @@ void input_matrix_identifier(char* assigned_matrix_identifier)
 /* search matrix by name from matrix.txt file and read it to a variable
 in the program (slot_A or slot_B or slot_C).
 */
-void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int storage_variable)
+void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int chosen_variable)
 {
-	char searched_variable_char = assigned_matrix_identifier[0];
+	char searched_variable_char = searched_matrix_identifier[0];
 
 	FILE *fp;
 	fp = fopen(FILENAME, "r");
@@ -367,11 +374,7 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 
 	int current_matrix_rows = 0;
 	int current_matrix_columns = 0;
-
-	malloc_matrix(&slot_A);	
-	malloc_matrix(&slot_B);
-	malloc_matrix(&slot_C);
-
+	
 	if (fp != 0)
 	{
 		while (fgets(line, sizeof(line), fp) != 0)
@@ -430,16 +433,16 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 						current_number = atoi(current_number_string);
 						
 						/* put the number in the right matrix as requested by the user */
-						if (storage_variable == 1)
+						if (chosen_variable == 1)
 						{									
 							slot_A[row_index][column_index] = current_number;
 						}
-						else if (storage_variable == 2)
+						else if (chosen_variable == 2)
 						{
 							slot_B[row_index][column_index] = current_number;
 
 						}
-						else if (storage_variable == 3)
+						else if (chosen_variable == 3)
 						{
 							slot_C[row_index][column_index] = current_number;
 
@@ -458,15 +461,15 @@ void read_matrix_from_file_into_variable(char* assigned_matrix_identifier, int s
 		}
 
 		/* print the right matrix as requested by the user */
-		if (storage_variable == 1)
+		if (chosen_variable == 1)
 		{
 			print_matrix(slot_A, current_matrix_rows, current_matrix_columns);
 		}
-		else if (storage_variable == 2)
+		else if (chosen_variable == 2)
 		{
 			print_matrix(slot_B, current_matrix_rows, current_matrix_columns);
 		}
-		else if (storage_variable == 3)
+		else if (chosen_variable == 3)
 		{
 			print_matrix(slot_C, current_matrix_rows, current_matrix_columns);
 		}
