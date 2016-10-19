@@ -21,7 +21,8 @@ void free_matrix_space(int** matrix);
 void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier);
 void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int chosen_variable);
 void clear_matrix_file(void);
-void print_matrix_file(void);
+void print_all_matrices_in_file_format(void);
+void print_matrix_by_name(int* matrix[]);
 
 /* user related functions */
 void input_matrix_measures(int chosen_variable);
@@ -38,6 +39,7 @@ static int **slot_C;
 int main(void)
 {	
 	int user_choice;
+	int user_choice_layer_2;
 	static int chosen_variable;
 
 	static char searched_matrix_identifier[1];
@@ -50,12 +52,12 @@ int main(void)
 	do 
 	{
 		printf("------------------------ USER OPTIONS -------------------------------------\n");
-		printf("enter a matrix = 1\n");
-		printf("give a statement = 2\n");
-		printf("read a matrix by name, into a variable = 3\n");
-		printf("perform operations on the given matrices = 4\n");
-		printf("print earlier matrix entries = '7'\n");
-		printf("delete earlier matrix entries = '8'\n");
+		printf("enter a matrix = '1'\n");
+		printf("give a statement = '2'\n");
+		printf("read a matrix by name, into a variable = '3'\n");
+		printf("perform operations on the given matrices = '4'\n");
+		printf("print something = '7'\n");
+		printf("delete something = '8'\n");
 		printf("exit program = '9'\n");
 		printf("---------------------------------------------------------------------------\n");
 		
@@ -172,11 +174,44 @@ int main(void)
 				break;
 */
 			case 7:
-				print_matrix_file();
+
+	
+				printf("------------------------ PRINT OPTIONS -------------------------------------\n");
+				printf("print a matrix by name from file = '1'\n");
+				printf("print all matrices in file format = '2'\n");
+				printf("print all matrices in currently existing variables = '3'\n");
+				printf("---------------------------------------------------------------------------\n");
+	
+				scanf("%d", &user_choice_layer_2);
+				
+				if (user_choice_layer_2 ==  2)
+				{
+					print_all_matrices_in_file_format();
+				}
+				else if (user_choice_layer_2 == 3)
+				{
+					printf("MATRIX A\n\n");
+					print_matrix(slot_A, A_rows, A_columns);
+					printf("MATRIX B\n\n");
+					print_matrix(slot_B, B_rows, B_columns);
+					printf("MATRIX C\n\n");
+					print_matrix(slot_C, C_rows, C_columns);
+				}
 				break;
 
 			case 8:
-				clear_matrix_file();	
+				
+				printf("------------------------ DELETE OPTIONS -------------------------------------\n");
+				printf("delete a matrix by name from file = '1'\n");
+				printf("delete all matrices from file = '2'\n");
+				printf("---------------------------------------------------------------------------\n");
+				
+				scanf("%d", &user_choice_layer_2);
+				
+				if (user_choice_layer_2 == 2)
+				{
+					clear_matrix_file();	
+				}
 				break;
 
 			case 9:
@@ -197,7 +232,6 @@ int main(void)
 void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_identifier)
 {
 		input_matrix_measures(chosen_variable);
-//		malloc_matrix(&matrix);
 		build_matrix(matrix);
 		print_matrix(matrix, chosen_variable_rows, chosen_variable_columns);
 		input_matrix_identifier(assigned_matrix_identifier);
@@ -235,6 +269,11 @@ void print_matrix(int* matrix[], int rows, int columns)
 		printf("\n");
 	}
 	printf("___________________________________________________________________\n\n");
+}
+
+void print_matrix_by_name(int* matrix[])
+{
+
 }
 
 void input_matrix_measures(int chosen_variable)
@@ -300,7 +339,7 @@ void malloc_matrix(int*** matrix)
 }
 
 
-void print_matrix_file(void)
+void print_all_matrices_in_file_format(void)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "r");
