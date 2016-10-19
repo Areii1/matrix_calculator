@@ -1,10 +1,9 @@
 TO be implemented on the calculator:
 
-- Be able to save and load matrices by name, to/from a file.
+- print matrix from file by name
+- delete matrix from file by name
 
 - have the program recognize and execute statements like (A * B) written as input to scanf
-
--
 
 - solve linear systems in the form of Ax = b, where A is the matrix of coefficients, 
 	x is vector of unknowns (x, y, z) and b is a vector of constants.
@@ -42,3 +41,12 @@ FLOW OF THE PROGRAM:
 ADDITIONAL IDEAS:
 
 - make tests to check the validity of certain operations
+
+
+
+DONE already: 
+
+- Be able to save and load matrices by name, to/from a file.
+
+
+

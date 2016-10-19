@@ -11,7 +11,7 @@
 #define MAXSTRLEN 2000
 
 /* matrix building related functions */
-void complete_matrix(int* matrix[]);
+void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_identifier);
 int build_matrix(int* matrix[], int rows, int columns);
 void print_matrix(int* matrix[], int user_rows, int user_columns);
 void malloc_matrix(int*** matrix);
@@ -24,7 +24,8 @@ void print_matrix_file(void);
 
 /* user related functions */
 void input_matrix_measures(int chosen_variable);
-void input_matrix_identifier(int* matrix[], int user_rows, int user_columns);
+void input_matrix_identifier(int* matrix[], char* assigned_matrix_identifier, 
+		int user_rows, int user_columns);
 
 int count_line_length(char* line);
 
@@ -32,13 +33,14 @@ static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns, chosen_varia
 static int **slot_A;
 static int **slot_B;
 static int **slot_C;
-static int chosen_variable;
-static char assigned_matrix_identifier[1];
-static char searched_matrix_identifier[1];
 
 int main(void)
 {	
 	int user_choice;
+	static int chosen_variable;
+
+	static char searched_matrix_identifier[1];
+	static char assigned_matrix_identifier[1];
 
 	do 
 	{
@@ -62,15 +64,15 @@ int main(void)
 		
 				if (chosen_variable == 1)
 				{
-					complete_matrix(slot_A);
+					complete_matrix(slot_A, chosen_variable, assigned_matrix_identifier);
 				}
 				else if (chosen_variable == 2)
 				{
-					complete_matrix(slot_B);
+					complete_matrix(slot_B, chosen_variable, assigned_matrix_identifier);
 				}
 				else if (chosen_variable == 3)
 				{
-					complete_matrix(slot_C);
+					complete_matrix(slot_C, chosen_variable, assigned_matrix_identifier);
 				}
 
 				break;
@@ -196,13 +198,14 @@ int main(void)
 	return 0;
 }
 
-void complete_matrix(int* matrix[])
+void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_identifier)
 {
 		input_matrix_measures(chosen_variable);
 		malloc_matrix(&slot_A);
 		build_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
 		print_matrix(slot_A, chosen_variable_rows, chosen_variable_columns);
-		input_matrix_identifier(slot_A, chosen_variable_rows, chosen_variable_columns);
+		input_matrix_identifier(slot_A, assigned_matrix_identifier,
+				chosen_variable_rows, chosen_variable_columns);
 		write_matrix_to_file(slot_A, chosen_variable_rows, chosen_variable_columns, assigned_matrix_identifier);
 }
 
@@ -346,7 +349,8 @@ void clear_matrix_file(void)
 	printf("\nsuccesfully deleted all entries in %s\n", FILENAME);
 }
 
-void input_matrix_identifier(int* matrix[], int user_rows, int user_columns)
+void input_matrix_identifier(int* matrix[], char* assigned_matrix_identifier,
+		int user_rows, int user_columns)
 {
 	printf("give a one character long name for the matrix\n");
 	scanf("%s", assigned_matrix_identifier);
