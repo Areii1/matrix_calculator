@@ -18,7 +18,8 @@ void malloc_matrix(int*** matrix);
 void free_matrix_space(int** matrix);
 
 /* file handling related functions */
-void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier);
+void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier,
+		int rows, int columns);
 void read_matrix_from_file_into_variable(char* searched_matrix_identifier, int chosen_variable);
 void clear_matrix_file(void);
 void print_all_matrices_in_file_format(void);
@@ -41,6 +42,8 @@ int main(void)
 {	
 	int user_choice;
 	int user_choice_layer_2;
+	int user_choice_layer_3;
+
 	static int chosen_variable;
 
 	static char searched_matrix_identifier[1];
@@ -103,36 +106,63 @@ int main(void)
 
 			case 4:
 
-/*
-				printf("add = '1', substract = '2', multiply = '3', transpose = '4'\n");
-				scanf("%d", &user_choice);
+				printf("----------------------- ALGEBRA NOTICE --------------------------------------\n");
+				printf("A_slot matrix is the first operand, B_slot matrix is the second operand, C_slot is for the destination\n\n");
 
+				printf("------------------------ ALGEBRA OPTIONS -------------------------------------\n");
+				printf("add matrices = '1'\n");
+				printf("substract matrices = '2'\n");
+				printf("multiply matrices = '3'\n");
+				printf("transpose matrix = '4'\n");
+				printf("---------------------------------------------------------------------------\n");
+				
+				scanf("%d", &user_choice_layer_2);
+				
 				//check for matrix measure legality for certain operations
-				if (((user_choice == 1 || user_choice == 2) && (A_rows == B_rows && A_columns == B_columns))
-						|| (user_choice == 3 && A_columns == B_rows)
-						|| (user_choice == 4)
-						)
+				if ((((user_choice_layer_2 == 1 || user_choice_layer_2 == 2)
+						&& (A_rows == B_rows && A_columns == B_columns))
+						|| (user_choice_layer_2 == 3 && A_columns == B_rows)
+						|| (user_choice_layer_2 == 4)))
 				{
 				//execute the process determinde by user_choice
 
 					int user_choice;
 					int choice_conflict = 0;
 
-					switch (user_choice)
+					switch (user_choice_layer_2)
 					{
 						case 1:
+							C_rows = A_rows;
+							C_columns = A_columns;
+
 							add_matrices(slot_A, slot_B, slot_C);
-							print_matrix(slot_C, A_rows, B_columns);
+							print_matrix(slot_C, C_rows, C_columns);
+
+							input_matrix_identifier(assigned_matrix_identifier);							
+							write_matrix_to_file(slot_C, assigned_matrix_identifier, C_rows, C_columns);
 							break;
 
 						case 2:
+							C_rows = A_rows;
+							C_columns = A_columns;
+
 							substract_matrices(slot_A, slot_B, slot_C);
-							print_matrix(slot_C, A_rows, B_columns);
+							print_matrix(slot_C, C_rows, C_columns);
+							
+							input_matrix_identifier(assigned_matrix_identifier);							
+							write_matrix_to_file(slot_C, assigned_matrix_identifier, C_rows, C_columns);
 							break;
 
 						case 3:
+							C_rows = A_rows;
+							C_columns = B_columns;
+
 							multiply_matrices(slot_A, slot_B, slot_C);
-							print_matrix(slot_C, A_rows, B_columns);
+							print_matrix(slot_C, C_rows, C_columns);
+
+							input_matrix_identifier(assigned_matrix_identifier);							
+							write_matrix_to_file(slot_C, assigned_matrix_identifier, C_rows, C_columns);
+							
 							break;
 
 						case 4:
@@ -140,23 +170,29 @@ int main(void)
 
 							do
 							{
-								scanf("%d", &user_choice);
+								scanf("%d", &user_choice_layer_3);
 								
-								if (user_choice == 1)
+								if (user_choice_layer_3 == 1)
 								{
+									C_rows = A_columns;
+									C_columns = A_rows;
+
 									transpose_matrix(slot_A, slot_C);
-									print_matrix(slot_C, MAX_ROWS, MAX_COLUMNS);
+									print_matrix(slot_C, A_columns, A_rows);
 									choice_conflict = 0;
 								}
-								else if (user_choice == 2)
+								else if (user_choice_layer_3 == 2)
 								{
+									C_rows = B_columns;
+									C_columns = B_rows;
+
 									transpose_matrix(slot_B, slot_C);
-									print_matrix(slot_C, MAX_ROWS, MAX_COLUMNS);
+									print_matrix(slot_C, C_rows, C_columns);
 									choice_conflict = 0;
 								}
 								else
 								{
-									printf("did not recognize '%d', slot_A = 1, slot_B = 2\n", user_choice);
+									printf("did not recognize '%d', slot_A = 1, slot_B = 2\n", user_choice_layer_3);
 									choice_conflict = 1;
 								}
 							} while (choice_conflict == 1);
@@ -172,7 +208,6 @@ int main(void)
 					printf("matrix slot_A and slot_B measures do not support the user suggested operation\n");
 				}
 
-			*/	
 				break;
 
 			case 7:
@@ -247,7 +282,8 @@ void complete_matrix(int* matrix[], int chosen_variable, char* assigned_matrix_i
 		build_matrix(matrix);
 		print_matrix(matrix, chosen_variable_rows, chosen_variable_columns);
 		input_matrix_identifier(assigned_matrix_identifier);
-		write_matrix_to_file(matrix, assigned_matrix_identifier);
+		write_matrix_to_file(matrix, assigned_matrix_identifier, chosen_variable_rows,
+				chosen_variable_columns);
 }
 
 int build_matrix(int* matrix[])
@@ -371,21 +407,22 @@ void print_all_matrices_in_file_format(void)
 	}
 }
 
-void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier)
+void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier,
+		int rows, int columns)
 {
 	FILE *fp;
 	fp = fopen(FILENAME, "a");
 	
 	fflush(fp);
 	fprintf(fp, "<%s>", assigned_matrix_identifier);
-	fprintf(fp, "(%d,%d)=", chosen_variable_rows, chosen_variable_columns);
+	fprintf(fp, "(%d,%d)=", rows, columns);
 	int x, y;
 
 	fputs("{", fp);
-	for (y = 0; y < chosen_variable_rows; y++)
+	for (y = 0; y < rows; y++)
 	{
 		fputs("{", fp);
-		for (x = 0; x < chosen_variable_columns; x++)
+		for (x = 0; x < columns; x++)
 		{
 			fprintf(fp, "%d,", matrix[y][x]);
 		}

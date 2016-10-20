@@ -1,7 +1,46 @@
 TO be implemented on the calculator:
 
-- print matrix from file by name
 - delete matrix from file by name
+
+- error handling:
+	- user input is of invalid type (not int) AT any stage
+	- user input is of invalid range
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 - have the program recognize and execute statements like (A * B) written as input to scanf
 
@@ -48,5 +87,6 @@ DONE already:
 
 - Be able to save and load matrices by name, to/from a file.
 
+- print matrix from file by name
 
 
