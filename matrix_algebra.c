@@ -96,9 +96,17 @@ receives a pointer to a matrix with matrix_rows amount of non-degenerate rows,
 void gaussian_elimination(double* matrix[], double* destination_matrix[],
 		int rows, int columns)
 {
-	int y, x;
 
 	organize_matrix(matrix, destination_matrix, rows, columns);
+	
+	printf("matrix before eliminate_below_values\n");
+	print_matrix(matrix, rows, columns);
+
+	eliminate_below_values(matrix, destination_matrix, rows, columns);
+
+	
+	printf("matrix after eliminate_below_values\n");
+	print_matrix(matrix, rows, columns);
 }
 
 void organize_matrix(double* matrix[], double* destination_matrix[], int rows, int columns)
@@ -198,3 +206,79 @@ void swap_rows(double* matrix[], double* destination_matrix[], int a, int b,
 	}
 }
 
+void eliminate_below_values(double* matrix[], double* destination_matrix[],
+		int rows,	int columns)
+{
+	double vector[rows];
+	int i, j, value_to_eliminate;
+	double row_leading_value;
+	int leading_value_column;
+	int leading_value_row;
+
+	for (i = 0; i < rows; i++)
+	{
+		get_leading_zeros_table(matrix, rows, columns);
+		row_leading_value = matrix[i][leading_zeros_table[i]];
+		leading_value_column = leading_zeros_table[i];
+		leading_value_row = i;
+
+		
+		printf("matrix inside eliminate_below_values, i = %d\n", i);
+		print_matrix(matrix, rows, columns);
+		
+		for (j = 0; j < rows; j++)
+		{
+			vector[j] = matrix[j][leading_zeros_table[i]];
+		}
+		perform_column_elimination(matrix, vector, row_leading_value,
+				leading_value_column, leading_value_row, rows, columns);
+	}
+}
+
+void perform_column_elimination(double* matrix[], double vector[], 
+		double row_leading_value, int leading_value_column, 
+		int leading_value_row, int rows, int columns)
+{
+
+	/* print vector */
+	int k;
+	for (k = 0; k < rows; k++)
+	{
+		printf("vector[%d] = %lf\t", k, vector[k]);
+	}
+	printf("\n\n");
+
+	printf("row_leading_value = %lf, leading_value_row = %d, leading_value_column = %d\n\n", 
+			row_leading_value, leading_value_row, leading_value_column);
+
+	double a;
+	double operation_table[rows];
+	int i, x, y;
+
+	for (i = 0; i < rows - 1; i++)
+	{
+		a = (-1) * (vector[i + leading_value_row + 1]/row_leading_value);
+		operation_table[i] = a;
+	}
+
+	/* apply to the whole matrix */
+
+	int operation_counter = 0;
+
+	for (y = leading_value_row + 1; y < rows; y++)
+	{
+		for (x = leading_value_column; x < columns; x++)
+		{
+			matrix[y][x] = (matrix[leading_value_row][x]
+				* operation_table[operation_counter]) + matrix[y][x];
+		}
+		operation_counter++;
+	}
+	
+	/* print operation table */
+	for (k = 0; k < rows; k++)
+	{
+		printf("operation_table[%d] = %lf\t", k, operation_table[k]);
+	}
+	printf("\n\n");
+}

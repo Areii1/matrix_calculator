@@ -21,3 +21,10 @@ void get_leading_zeros_table(double* matrix[], int rows, int columns);
 
 void swap_rows(double* matrix[], double* destination_matrix[], int a, int b,
 		int rows, int columns);
+
+void eliminate_below_values(double* matrix[], double* destination_matrix[],
+		int rows, int columns);
+
+void perform_column_elimination(double* matrix[], double vector[],
+		double row_leading_value, int leading_value_row, int leading_value_column,
+		int rows, int columns);

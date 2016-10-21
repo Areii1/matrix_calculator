@@ -1,0 +1,5 @@
+KNOWN ISSUES:
+
+- can only read a square matrix from file, matrix of type n x m produces zero's
+	on the "overflown" columns
+
