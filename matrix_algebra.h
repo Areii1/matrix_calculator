@@ -16,3 +16,7 @@ void transpose_matrix(int* A[], int* C[]);
 void gaussian_elimination(int* matrix[], int* destination_matrix[], int rows, int columns);
 
 void organize_matrix(int* matrix[], int rows, int columns);
+
+void get_leading_zeros_table(int* matrix[], int rows, int columns);
+
+void swap_rows(int* matrix[], int a, int b, int columns);

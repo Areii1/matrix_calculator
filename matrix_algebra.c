@@ -5,6 +5,8 @@
 #define MAX_ROWS 9
 #define MAX_COLUMNS 9
 
+int leading_zeros_table[MAX_COLUMNS];
+
 void add_matrices(int* A[], int* B[], int* C[])
 {
 	int y, x;
@@ -109,7 +111,39 @@ void gaussian_elimination(int* matrix[], int* destination_matrix[],
 
 void organize_matrix(int* matrix[], int rows, int columns)
 {
-	int leading_zeros_table[rows];
+	int i, a, temp;
+
+	get_leading_zeros_table(matrix, rows, columns);
+
+
+	/* insertion sort */
+	for (i = 1; i < rows; i++)
+	{
+		a = i;
+
+		while (a > 0 && leading_zeros_table[a] < leading_zeros_table[a - 1])
+		{
+			temp = leading_zeros_table[a];
+//			swap_rows(matrix, a, a - 1, columns);
+			leading_zeros_table[a] = leading_zeros_table[a - 1];
+			leading_zeros_table[a - 1] = temp;
+
+			a--;
+		}
+	}
+
+	for (i = 0; i < rows; i++)
+	{
+		printf("row(%d) = %d\n", i, leading_zeros_table[i]);
+	}
+
+	print_matrix(matrix, rows, columns);
+
+	
+}
+
+void get_leading_zeros_table(int* matrix[], int rows, int columns)
+{
 	int leading_zeros_counter = 0;
 	int y, x, i;
 
@@ -147,11 +181,23 @@ void organize_matrix(int* matrix[], int rows, int columns)
 				break;
 			}
 		}
-	//	printf("leading_zeros_counter = %d\n", leading_zeros_counter);
 	}
-
+	printf("first shit inside func\n");
 	for (i = 0; i < rows; i++)
 	{
-		printf("table[%d] = %d\n", i, leading_zeros_table[i]);
+		printf("row(%d) = %d\n", i, leading_zeros_table[i]);
 	}
 }
+
+/*
+void swap_rows(int* matrix[], int a, int b, int columns)
+{
+	int x;
+
+	for (x = 0; x < columns; x++)
+	{
+		matrix[a][x] = matrix[b][x];
+	}
+}
+
+*/
