@@ -12,3 +12,7 @@ int dot_product(int* a[], int* b[], int y, int x);
 void print_vector(int* C[], int y, int x, int a_or_b);
 
 void transpose_matrix(int* A[], int* C[]);
+
+void gaussian_elimination(int* matrix[], int* destination_matrix[], int rows, int columns);
+
+void organize_matrix(int* matrix[], int rows, int columns);

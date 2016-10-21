@@ -119,10 +119,11 @@ int main(void)
 				scanf("%d", &user_choice_layer_2);
 				
 				//check for matrix measure legality for certain operations
-				if ((((user_choice_layer_2 == 1 || user_choice_layer_2 == 2)
+				if (((user_choice_layer_2 == 1 || user_choice_layer_2 == 2)
 						&& (A_rows == B_rows && A_columns == B_columns))
 						|| (user_choice_layer_2 == 3 && A_columns == B_rows)
-						|| (user_choice_layer_2 == 4)))
+						|| (user_choice_layer_2 == 4)
+						|| (user_choice_layer_2 == 5))
 				{
 				//execute the process determinde by user_choice
 
@@ -198,10 +199,16 @@ int main(void)
 							} while (choice_conflict == 1);
 							break;
 
+						case 5:
+							gaussian_elimination(slot_A, slot_C, A_rows, A_columns);
+							break;
+
 						default:
 							printf("user value not regonized\n");
 							break;
-					}
+
+
+					}	
 				}
 				else
 				{

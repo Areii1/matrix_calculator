@@ -91,21 +91,67 @@ void transpose_matrix(int* A[], int* C[])
 /*
 receives a pointer to a matrix with matrix_rows amount of non-degenerate rows, 
 */
-/*
 void gaussian_elimination(int* matrix[], int* destination_matrix[],
-		int matrix_rows, int matrix_columns)
+		int rows, int columns)
 {
 	int y, x;
 
-	for (y = 0; y < matrix_rows; y++)
+	organize_matrix(matrix, rows, columns);
+/*
+	for (y = 0; y < rows; y++)
 	{
-		for (x = 0; x < matri_columns; x++)
+		for (x = 0; x < columns; x++)
 		{
-			if (matrix[x][0] != 0)
-				{
-					interchange_rows(0, y);
-				}
 		}
 	}
+	*/
 }
-*/
+
+void organize_matrix(int* matrix[], int rows, int columns)
+{
+	int leading_zeros_table[rows];
+	int leading_zeros_counter = 0;
+	int y, x, i;
+
+	for (y = 0; y < rows; y++)
+	{
+		leading_zeros_counter = 0;
+		for (x = 0; x < columns; x++)
+		{
+			if (matrix[y][0] == 0)
+			{
+				leading_zeros_counter++;
+				for (i = 1; i < columns; i++)
+				{
+					x++;
+					if (matrix[y][i] == 0)
+					{
+						leading_zeros_counter++;
+					}
+					else
+					{
+						leading_zeros_table[y] = leading_zeros_counter;
+						leading_zeros_counter = 0;
+						break;
+					}
+				}
+			}
+			else
+			{
+				leading_zeros_table[y] = 0;
+				leading_zeros_counter = 0;
+			}
+				
+			if (leading_zeros_counter != 0)
+			{
+				break;
+			}
+		}
+	//	printf("leading_zeros_counter = %d\n", leading_zeros_counter);
+	}
+
+	for (i = 0; i < rows; i++)
+	{
+		printf("table[%d] = %d\n", i, leading_zeros_table[i]);
+	}
+}

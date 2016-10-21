@@ -1,0 +1,14 @@
+------------------------------ GAUSSIAN ELIMINATION -----------------------------------
+
+- it receives a matrix and outputs the row equivilent version of the same matrix it
+echelon form.
+
+
+- first it needs to detect rows with leading zero's
+		- swap the rows in an ascending order by the amount of leading zero's
+				- least leading zero's row at the top, most leading zero's at the bottom.
+
+- second it needs to terminate every value below the first leading non-zero value of the first row
+	- same thing for the first leading non-zero value of the second row
+		- continue until every leading non-zero value of any row does not have any non-zero
+			values below them.
