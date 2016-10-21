@@ -7,7 +7,7 @@
 
 int leading_zeros_table[MAX_COLUMNS];
 
-void add_matrices(int* A[], int* B[], int* C[])
+void add_matrices(double* A[], double* B[], double* C[])
 {
 	int y, x;
 
@@ -20,7 +20,7 @@ void add_matrices(int* A[], int* B[], int* C[])
 	}
 }
 
-void substract_matrices(int* A[], int* B[], int* C[])
+void substract_matrices(double* A[], double* B[], double* C[])
 {
 	int y, x;
 
@@ -35,7 +35,7 @@ void substract_matrices(int* A[], int* B[], int* C[])
 }
 
 
-void multiply_matrices(int* A[], int* B[], int* C[])
+void multiply_matrices(double* A[], double* B[], double* C[])
 {
 	int y, x;
 
@@ -48,10 +48,10 @@ void multiply_matrices(int* A[], int* B[], int* C[])
 	}
 }
 
-int dot_product(int* a[], int* b[], int y, int x)
+double dot_product(double* a[], double* b[], int y, int x)
 {
 	int i;
-	int result = 0;
+	double result = 0;
 
 	for (i = 0; i < MAX_COLUMNS; i++)
 	{
@@ -60,7 +60,7 @@ int dot_product(int* a[], int* b[], int y, int x)
 	return result;
 }
 
-void print_vector(int* C[], int y, int x, int a_or_b)
+void print_vector(double* C[], int y, int x, int a_or_b)
 {
 	int i;
 	
@@ -68,16 +68,16 @@ void print_vector(int* C[], int y, int x, int a_or_b)
 	{
 		if (a_or_b == 1)
 		{
-			printf("A[0][%d] = %d\n", i,  C[y][i]);
+			printf("A[0][%d] = %lf\n", i,  C[y][i]);
 		}
 		else if (a_or_b == 2)
 		{
-			printf("B[%d][0] = %d\n", i,  C[i][x]);
+			printf("B[%d][0] = %lf\n", i,  C[i][x]);
 		}
 	}
 }
 
-void transpose_matrix(int* A[], int* C[])
+void transpose_matrix(double* A[], double* C[])
 {
 	int y, x;
 
@@ -93,7 +93,7 @@ void transpose_matrix(int* A[], int* C[])
 /*
 receives a pointer to a matrix with matrix_rows amount of non-degenerate rows, 
 */
-void gaussian_elimination(int* matrix[], int* destination_matrix[],
+void gaussian_elimination(double* matrix[], double* destination_matrix[],
 		int rows, int columns)
 {
 	int y, x;
@@ -101,7 +101,7 @@ void gaussian_elimination(int* matrix[], int* destination_matrix[],
 	organize_matrix(matrix, destination_matrix, rows, columns);
 }
 
-void organize_matrix(int* matrix[], int* destination_matrix[], int rows, int columns)
+void organize_matrix(double* matrix[], double* destination_matrix[], int rows, int columns)
 {
 	int i, a, temp;
 	int x, y;
@@ -134,7 +134,7 @@ void organize_matrix(int* matrix[], int* destination_matrix[], int rows, int col
 	}
 }
 
-void get_leading_zeros_table(int* matrix[], int rows, int columns)
+void get_leading_zeros_table(double* matrix[], int rows, int columns)
 {
 	int leading_zeros_counter = 0;
 	int y, x, i;
@@ -176,7 +176,7 @@ void get_leading_zeros_table(int* matrix[], int rows, int columns)
 	}
 }
 
-void swap_rows(int* matrix[], int* destination_matrix[], int a, int b,
+void swap_rows(double* matrix[], double* destination_matrix[], int a, int b,
 		int rows, int columns)
 {
 	int x, y, temp;

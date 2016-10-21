@@ -11,16 +11,16 @@
 #define MAXSTRLEN 2000
 
 /* matrix building related functions */
-void complete_matrix(int* matrix[], int chosen_variable, 
+void complete_matrix(double* matrix[], int chosen_variable, 
 		char* assigned_matrix_identifier);
 
-int build_matrix(int* matrix[]);
-void print_matrix(int* matrix[], int rows, int columns);
-void malloc_matrix(int*** matrix);
-void free_matrix_space(int** matrix);
+int build_matrix(double* matrix[]);
+void print_matrix(double* matrix[], int rows, int columns);
+void malloc_matrix(double*** matrix);
+void free_matrix_space(double** matrix);
 
 /* file handling related functions */
-void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier,
+void write_matrix_to_file(double* matrix[], char* assigned_matrix_identifier,
 		int rows, int columns);
 
 void read_matrix_from_file_into_variable(char* searched_matrix_identifier, 
@@ -28,7 +28,7 @@ void read_matrix_from_file_into_variable(char* searched_matrix_identifier,
 
 void clear_matrix_file(void);
 void print_all_matrices_in_file_format(void);
-void print_matrix_by_name(int* matrix[]);
+void print_matrix_by_name(double* matrix[]);
 
 /* user related functions */
 void input_matrix_measures(int chosen_variable);
@@ -39,10 +39,10 @@ int count_line_length(char* line);
 static int A_rows, A_columns, B_rows, B_columns, C_rows, C_columns;
 static int extra_rows, extra_columns;
 static int chosen_variable_rows, chosen_variable_columns;
-static int **slot_A;
-static int **slot_B;
-static int **slot_C;
-static int **slot_extra;
+static double **slot_A;
+static double **slot_B;
+static double **slot_C;
+static double **slot_extra;
 
 int main(void)
 {	
@@ -302,7 +302,7 @@ int main(void)
 	return 0;
 }
 
-void complete_matrix(int* matrix[], int chosen_variable,
+void complete_matrix(double* matrix[], int chosen_variable,
 		char* assigned_matrix_identifier)
 {
 		input_matrix_measures(chosen_variable);
@@ -313,7 +313,7 @@ void complete_matrix(int* matrix[], int chosen_variable,
 				chosen_variable_rows,	chosen_variable_columns);
 }
 
-int build_matrix(int* matrix[])
+int build_matrix(double* matrix[])
 {
 	int x, y;
 
@@ -323,13 +323,13 @@ int build_matrix(int* matrix[])
 		{
 
 				printf("element [%d,%d]: ", y, x);
-				scanf("%d", &matrix[y][x]);
+				scanf("%lf", &matrix[y][x]);
 		}
 	}
 	return 0;
 }
 
-void print_matrix(int* matrix[], int rows, int columns)
+void print_matrix(double* matrix[], int rows, int columns)
 {
 	int y, x;	
 	
@@ -339,14 +339,14 @@ void print_matrix(int* matrix[], int rows, int columns)
 		printf("\n");
 		for (x = 0; x < columns; x++)
 		{
-			printf("%d\t", matrix[y][x]);
+			printf("%lf\t", matrix[y][x]);
 		}
 		printf("\n");
 	}
 	printf("______________________________________________________________\n\n");
 }
 
-void print_matrix_by_name(int* matrix[])
+void print_matrix_by_name(double* matrix[])
 {
 
 }
@@ -391,7 +391,7 @@ void input_matrix_measures(int chosen_variable)
 	}
 }
 
-void free_matrix_space(int** matrix)
+void free_matrix_space(double** matrix)
 {
 	int i;
 
@@ -402,14 +402,14 @@ void free_matrix_space(int** matrix)
 	free(matrix);
 }
 
-void malloc_matrix(int*** matrix)
+void malloc_matrix(double*** matrix)
 {
 	int j;
 
-	*matrix = (int*)malloc(MAX_ROWS * sizeof *matrix);
+	*matrix = (double*)malloc(MAX_ROWS * sizeof *matrix);
 	for (j = 0; j < MAX_ROWS; j++)
 	{
-		(*matrix)[j] = (int*)malloc(MAX_COLUMNS * sizeof *matrix[j]);
+		(*matrix)[j] = (double*)malloc(MAX_COLUMNS * sizeof *matrix[j]);
 	}	
 }
 
@@ -434,7 +434,7 @@ void print_all_matrices_in_file_format(void)
 	}
 }
 
-void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier,
+void write_matrix_to_file(double* matrix[], char* assigned_matrix_identifier,
 		int rows, int columns)
 {
 	FILE *fp;
@@ -451,7 +451,7 @@ void write_matrix_to_file(int* matrix[], char* assigned_matrix_identifier,
 		fputs("{", fp);
 		for (x = 0; x < columns; x++)
 		{
-			fprintf(fp, "%d,", matrix[y][x]);
+			fprintf(fp, "%lf,", matrix[y][x]);
 		}
 		fputs("}", fp);
 	}
