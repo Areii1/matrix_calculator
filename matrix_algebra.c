@@ -98,23 +98,24 @@ void gaussian_elimination(int* matrix[], int* destination_matrix[],
 {
 	int y, x;
 
-	organize_matrix(matrix, rows, columns);
-/*
+	organize_matrix(matrix, destination_matrix, rows, columns);
+}
+
+void organize_matrix(int* matrix[], int* destination_matrix[], int rows, int columns)
+{
+	int i, a, temp;
+	int x, y;
+
+	get_leading_zeros_table(matrix, rows, columns);
+
+	/* copy the matrix to the destination_matrix */
 	for (y = 0; y < rows; y++)
 	{
 		for (x = 0; x < columns; x++)
 		{
+			destination_matrix[y][x] = matrix[y][x];
 		}
 	}
-	*/
-}
-
-void organize_matrix(int* matrix[], int rows, int columns)
-{
-	int i, a, temp;
-
-	get_leading_zeros_table(matrix, rows, columns);
-
 
 	/* insertion sort */
 	for (i = 1; i < rows; i++)
@@ -124,22 +125,13 @@ void organize_matrix(int* matrix[], int rows, int columns)
 		while (a > 0 && leading_zeros_table[a] < leading_zeros_table[a - 1])
 		{
 			temp = leading_zeros_table[a];
-//			swap_rows(matrix, a, a - 1, columns);
+			swap_rows(matrix, destination_matrix, a, a - 1, rows, columns);
 			leading_zeros_table[a] = leading_zeros_table[a - 1];
 			leading_zeros_table[a - 1] = temp;
 
 			a--;
 		}
 	}
-
-	for (i = 0; i < rows; i++)
-	{
-		printf("row(%d) = %d\n", i, leading_zeros_table[i]);
-	}
-
-	print_matrix(matrix, rows, columns);
-
-	
 }
 
 void get_leading_zeros_table(int* matrix[], int rows, int columns)
@@ -182,22 +174,27 @@ void get_leading_zeros_table(int* matrix[], int rows, int columns)
 			}
 		}
 	}
-	printf("first shit inside func\n");
-	for (i = 0; i < rows; i++)
-	{
-		printf("row(%d) = %d\n", i, leading_zeros_table[i]);
-	}
 }
 
-/*
-void swap_rows(int* matrix[], int a, int b, int columns)
+void swap_rows(int* matrix[], int* destination_matrix[], int a, int b,
+		int rows, int columns)
 {
-	int x;
+	int x, y, temp;
 
 	for (x = 0; x < columns; x++)
 	{
+		temp = matrix[a][x];
 		matrix[a][x] = matrix[b][x];
+		matrix[b][x] = temp;
+	}
+
+	/* copy the matrix to the destination_matrix */
+	for (y = 0; y < rows; y++)
+	{
+		for (x = 0; x < columns; x++)
+		{
+			destination_matrix[y][x] = matrix[y][x];
+		}
 	}
 }
 
-*/

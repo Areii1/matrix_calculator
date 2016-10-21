@@ -120,7 +120,8 @@ int main(void)
 				printf("add matrices = '1'\n");
 				printf("substract matrices = '2'\n");
 				printf("multiply matrices = '3'\n");
-				printf("transpose matrix = '4'\n");
+				printf("transpose slot_A matrix = '4'\n");
+				printf("apply gaussian elimination on slot_A matrix = '5'\n");
 				printf("----------------------------------------------------------\n");
 				
 				scanf("%d", &user_choice_layer_2);
@@ -212,8 +213,13 @@ int main(void)
 							break;
 
 						case 5:
+							C_rows = A_rows;
+							C_columns = A_columns;
+
 							gaussian_elimination(slot_A, slot_C, A_rows, A_columns);
-							printf("done\n");
+							printf("destination matrix inside main.c\n");
+							print_matrix(slot_C, C_rows, C_columns);
+
 							break;
 
 						default:
