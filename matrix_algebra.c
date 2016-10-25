@@ -107,6 +107,15 @@ void gaussian_elimination(double* matrix[], double* destination_matrix[],
 	
 	printf("matrix after eliminate_below_values\n");
 	print_matrix(matrix, rows, columns);
+
+	int x, y;
+	for (y = 0; y < rows; y++)
+	{
+		for (x = 0; x < columns; x++)
+		{
+			destination_matrix[y][x] = matrix[y][x];
+		}
+	}
 }
 
 void organize_matrix(double* matrix[], double* destination_matrix[], int rows, int columns)

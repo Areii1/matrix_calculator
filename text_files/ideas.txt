@@ -1,13 +1,19 @@
 TO be implemented on the calculator:
 
-- delete matrix from file by name
+1. make tests to check the validity of all the algebraic operations, 
+	and file handling (CUnit).
+
+- generate a matrix with random integers or random doubles.
 
 - error handling:
 	- user input is of invalid type (not int) AT any stage
 	- user input is of invalid range
 
+- delete matrix from file by name
 
+- disallow creation of matrices by the same name.
 
+- print all the matrices in normal format from the matrix file
 
 
 
@@ -75,11 +81,6 @@ FLOW OF THE PROGRAM:
 		- or change the MAX_ROWS, MAX_COLUMNS
 
 
-
-
-ADDITIONAL IDEAS:
-
-- make tests to check the validity of certain operations
 
 
 

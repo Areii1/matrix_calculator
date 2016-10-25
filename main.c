@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <time.h>
+
 #include "matrix_algebra.h"
 
 #define MAX_ROWS 9
@@ -18,6 +20,8 @@ int build_matrix(double* matrix[]);
 void print_matrix(double* matrix[], int rows, int columns);
 void malloc_matrix(double*** matrix);
 void free_matrix_space(double** matrix);
+
+void generate_random_matrix(double* matrix[]);
 
 /* file handling related functions */
 void write_matrix_to_file(double* matrix[], char* assigned_matrix_identifier,
@@ -219,6 +223,11 @@ int main(void)
 							gaussian_elimination(slot_A, slot_C, A_rows, A_columns);
 							printf("destination matrix inside main.c\n");
 							print_matrix(slot_C, C_rows, C_columns);
+						
+							input_matrix_identifier(assigned_matrix_identifier);	
+							write_matrix_to_file(slot_C, assigned_matrix_identifier,
+									C_rows, C_columns);
+							
 
 							break;
 
@@ -306,7 +315,20 @@ void complete_matrix(double* matrix[], int chosen_variable,
 		char* assigned_matrix_identifier)
 {
 		input_matrix_measures(chosen_variable);
+		
+		int user_choice;
+		printf("enter matrix elements = '1', generate random elements = '2'\n");
+		scanf("%d", &user_choice);
+
+		if (user_choice == 1)
+		{
 		build_matrix(matrix);
+		}
+		else if (user_choice == 2)
+		{
+			generate_random_matrix(matrix);
+		}
+
 		print_matrix(matrix, chosen_variable_rows, chosen_variable_columns);
 		input_matrix_identifier(assigned_matrix_identifier);
 		write_matrix_to_file(matrix, assigned_matrix_identifier, 
@@ -628,4 +650,18 @@ int count_line_length(char* line)
 }
 
 
+void generate_random_matrix(double* matrix[])
+{
+	int y, x;
 
+	for (y = 0; y < chosen_variable_rows; y++)
+	{
+		for (x = 0; x < chosen_variable_columns; x++)
+		{
+			srand(time(NULL));
+			int r = rand() % 20;
+			matrix[y][x] = (int)r;
+		}
+
+	}
+}
