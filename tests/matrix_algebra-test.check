@@ -1,0 +1,165 @@
+#include "../matrix_algebra.h"
+#include "../user_interface.h"
+#include <stdio.h>
+
+
+static double** test_matrix_A;
+static double** test_matrix_B;
+static double** test_matrix_C;
+
+
+
+#test add_matrices_test
+
+	malloc_matrix(&test_matrix_A);
+	malloc_matrix(&test_matrix_B);
+	malloc_matrix(&test_matrix_C);
+	
+	int x, y;
+
+	for (y = 0; y < 2; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			test_matrix_A[y][x] = 1;
+			test_matrix_B[y][x] = 2;
+		}
+	}
+
+	add_matrices(test_matrix_A, test_matrix_B, test_matrix_C);
+
+	for (y = 0; y < 2; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			fail_unless(test_matrix_C[y][x] == 3, "add_matrices failed");
+		}
+	}
+	
+	free_matrix_space(test_matrix_A);
+	free_matrix_space(test_matrix_B);
+	free_matrix_space(test_matrix_C);
+
+#test add_matrices_test_part2
+	
+	malloc_matrix(&test_matrix_A);
+	malloc_matrix(&test_matrix_B);
+	malloc_matrix(&test_matrix_C);
+	
+	int x, y;
+
+	for (y = 0; y < 5; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			if ((y / 1 == 1) || (y / 3 == 1))
+			{
+				test_matrix_A[y][x] = 10;
+				test_matrix_B[y][x] = 21;
+			}
+			else 
+			{
+				test_matrix_A[y][x] = 123;
+				test_matrix_B[y][x] = -20;
+			}
+		}
+	}
+
+	add_matrices(test_matrix_A, test_matrix_B, test_matrix_C);
+
+	for (y = 0; y < 5; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			if ((y / 1 == 1) || (y / 3 == 1))
+			{
+				fail_unless(test_matrix_C[y][x] == 31, "add_matrices test failed");
+			}
+			else 
+			{
+				fail_unless(test_matrix_C[y][x] == 103, "add_matrices test failed");
+			}
+		}
+	}
+	
+	free_matrix_space(test_matrix_A);
+	free_matrix_space(test_matrix_B);
+	free_matrix_space(test_matrix_C);
+
+
+#test substract_matrices_test
+
+	malloc_matrix(&test_matrix_A);
+	malloc_matrix(&test_matrix_B);
+	malloc_matrix(&test_matrix_C);
+	
+	int x, y;
+
+	for (y = 0; y < 3; y++)
+	{
+		for (x = 0; x < 3; x++)
+		{
+			test_matrix_A[y][x] = 50;
+			test_matrix_B[y][x] = 20;
+		}
+	}
+
+	substract_matrices(test_matrix_A, test_matrix_B, test_matrix_C);
+
+	for (y = 0; y < 3; y++)
+	{
+		for (x = 0; x < 3; x++)
+		{
+			fail_unless(test_matrix_C[y][x] == 30, "substract function failed");
+		}
+	}
+	
+	free_matrix_space(test_matrix_A);
+	free_matrix_space(test_matrix_B);
+	free_matrix_space(test_matrix_C);
+
+#test substract_matrices_test_part2
+	
+	malloc_matrix(&test_matrix_A);
+	malloc_matrix(&test_matrix_B);
+	malloc_matrix(&test_matrix_C);
+	
+	int x, y;
+
+	for (y = 0; y < 5; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			if ((y / 1 == 1) || (y / 3 == 1))
+			{
+				test_matrix_A[y][x] = 14.50;
+				test_matrix_B[y][x] = 7.20;
+			}
+			else 
+			{
+				test_matrix_A[y][x] = 323;
+				test_matrix_B[y][x] = 20;
+			}
+		}
+	}
+
+	substract_matrices(test_matrix_A, test_matrix_B, test_matrix_C);
+
+	for (y = 0; y < 5; y++)
+	{
+		for (x = 0; x < 2; x++)
+		{
+			if ((y / 1 == 1) || (y / 3 == 1))
+			{
+				fail_unless(test_matrix_C[y][x] == 7.30, "substract_matrices test failed first");
+			}
+			else 
+			{
+				fail_unless(test_matrix_C[y][x] == 303, "substract_matrices test failed second");
+			}
+		}
+	}
+	
+	free_matrix_space(test_matrix_A);
+	free_matrix_space(test_matrix_B);
+	free_matrix_space(test_matrix_C);

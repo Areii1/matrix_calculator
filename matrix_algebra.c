@@ -29,8 +29,7 @@ void substract_matrices(double* A[], double* B[], double* C[])
 	{
 		for (x = 0; x < MAX_COLUMNS; x++)
 		{
-			B[y][x] = B[y][x] * -1;
-			C[y][x] = A[y][x] + B[y][x];
+			C[y][x] = A[y][x] + (B[y][x] * -1);
 		}
 	}
 }
